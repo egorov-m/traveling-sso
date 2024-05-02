@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  sso-postgres:
+    container_name: sso-postgres
+    networks:
+      - sso-net
+    image: postgres:16-alpine
+    ports:
+      - "33332:5432"
+    env_file:
+      - env/db.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./sso_postgres_data:/var/lib/postgresql/data
+
+  sso-service:
+    container_name: sso-service
+    networks:
+      - sso-net
+      - traveling-net
+    build:
+      context: .
+      dockerfile: build/Dockerfile
+      args:
+        - BASE_REPO=python
+        - BASE_TAG=3.11.3-slim-buster
+    ports:
+      - "33380:80"
+    env_file:
+      - env/db.env
+      - env/sso.env
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    depends_on:
+      sso-postgres:
+        condition: service_healthy
+
+networks:
+  traveling-net:
+    name: traveling-network
+    driver: bridge
+  sso-net:
+    name: sso-network
+    driver: bridge
