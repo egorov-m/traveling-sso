@@ -1,7 +1,6 @@
-from .core import Base, TimeStampMixin, db
+from .core import Base, TimeStampMixin
 
 __all__ = (
     Base,
     TimeStampMixin,
-    db
 )
