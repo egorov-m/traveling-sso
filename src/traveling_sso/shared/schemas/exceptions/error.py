@@ -12,6 +12,7 @@ class SsoErrorCode(IntEnum):
         1000-1999: oauth errors
         2000-2999: client errors
         3000-3999: user errors
+        4000-4999: documents errors
     """
 
     # 0-999: general errors
@@ -21,11 +22,20 @@ class SsoErrorCode(IntEnum):
     # 1000-1999: oauth errors
 
     # 2000-2999: client errors
+    CLIENT_NOT_FOUND = 2000
 
     # 3000-3999: user errors
-    USER_NOT_FOUND = 2000
-    USER_ROLE_NOT_FOUND = 2001
-    USER_NOT_SPECIFIED = 2002
+    USER_NOT_FOUND = 3000
+    USER_ROLE_NOT_FOUND = 3001
+    USER_NOT_SPECIFIED = 3002
+
+    # 4000-4999: documents errors
+    DOCUMENT_PASSPORT_RF_NOT_FOUND = 4000
+    DOCUMENT_PASSPORT_RF_NOT_SPECIFIED = 4001
+    DOCUMENT_PASSPORT_RF_ALREADY_EXIST_USER = 4002
+    DOCUMENT_FOREIGN_PASSPORT_RF_NOT_FOUND = 4003
+    DOCUMENT_FOREIGN_PASSPORT_RF_NOT_SPECIFIED = 4004
+    DOCUMENT_FOREIGN_PASSPORT_RF_ALREADY_EXIST_USER = 4005
 
 
 class SsoException(Exception):
