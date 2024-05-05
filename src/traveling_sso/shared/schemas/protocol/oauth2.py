@@ -1,6 +1,8 @@
+from typing import Optional
 from enum import StrEnum
+from uuid import UUID
 
-from pydantic import field_validator
+from pydantic import SecretStr, constr, Base64Str, Field
 
 from ..base import SsoBaseModel
 
@@ -15,3 +17,25 @@ class OAuth2ScopeType(StrEnum):
     profile = "profile"
     passport_rf = "passport_rf"
     foreign_passport_rf = "foreign_passport_rf"
+
+
+class OAuth2TokenType(StrEnum):
+    Bearer = "Bearer"
+
+
+class OAuth2AuthorizeResponseSchema(SsoBaseModel):
+    code: Optional[constr(min_length=48, max_length=48)] = None
+    id_token: Optional[SecretStr[Base64Str]] = None
+
+
+class OAuth2TokenResponseSchema(SsoBaseModel):
+    access_token: constr(min_length=48, max_length=48)
+    token_type: OAuth2TokenType = OAuth2TokenType.Bearer
+    expires_in: int
+    # refresh_token: constr(min_length=48, max_length=48)
+
+
+class OAuthIntrospectResponseSchema(SsoBaseModel):
+    active: bool = False
+    client_id: constr(min_length=48, max_length=48)
+    sub: UUID = Field(..., description="User id.")
