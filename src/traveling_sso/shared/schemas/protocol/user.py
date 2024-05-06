@@ -4,6 +4,7 @@ from typing import Optional
 from uuid import UUID
 
 from pydantic import EmailStr, Secret, constr
+from uuid_extensions import uuid7
 
 from ..base import SsoBaseModel
 
@@ -20,9 +21,9 @@ class CreateUserResponseSchema(SsoBaseModel):
 
 
 class InternalCreateUserResponseSchema(CreateUserResponseSchema):
-    id: UUID
+    id: UUID = uuid7()
     role: UserRoleType
-    passport_rf_id: Optional[UUID] = None,
+    passport_rf_id: Optional[UUID] = None
     foreign_passport_rf_id: Optional[UUID] = None
 
 

@@ -10,7 +10,6 @@ from traveling_sso.config import settings
 from traveling_sso.database.models import (
     Client,
     TokenSession,
-    TokenAgent,
     PassportRf,
     ForeignPassportRf,
     User

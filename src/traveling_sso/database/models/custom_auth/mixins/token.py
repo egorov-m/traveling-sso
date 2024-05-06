@@ -6,14 +6,6 @@ from ....utils import utcnow
 
 
 class _TokenMixin:
-    def check_client(self, client) -> bool:
-        """
-
-        :param client:
-        :return: bool
-        """
-        raise NotImplementedError()
-
     def get_expires_in(self) -> int:
         """
 
@@ -49,9 +41,6 @@ class TokenMixin(_TokenMixin):
     )
     refresh_token_revoked_at = Column(BigInteger, nullable=True)
     expires_in = Column(BigInteger, nullable=False)
-
-    def check_client(self, client) -> bool:
-        return self.client_id == client.get_client_id()
 
     def get_expires_in(self) -> int:
         return self.expires_in

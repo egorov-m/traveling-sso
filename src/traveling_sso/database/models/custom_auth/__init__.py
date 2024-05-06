@@ -14,7 +14,7 @@ from sqlalchemy.orm import relationship
 from uuid_extensions import uuid7
 
 from traveling_sso.shared.schemas.exceptions import user_not_found_exception
-from traveling_sso.shared.schemas.protocol import ClientSchema
+from traveling_sso.shared.schemas.protocol import ClientSchema, TokenResponseSchema
 from ... import TimeStampMixin, Base
 from .mixins import ClientMixin, TokenMixin
 
@@ -71,48 +71,10 @@ class TokenSession(Base, TimeStampMixin, TokenMixin):
     def is_refresh_token_active(self) -> bool:
         return not (self.is_revoked() or self.is_expired())
 
-
-class TokenAgent(Base, TimeStampMixin):
-    """
-
-    """
-
-    __table_args__ = (
-        UniqueConstraint("token_session_id", "fingerprint", "user_agent", "ip_address"),
-    )
-
-    id = Column(Uuid, default=uuid7, primary_key=True)
-    token_session_id = Column(ForeignKey("token_session.id", onupdate="CASCADE"), nullable=False)
-    fingerprint = Column(String(40), nullable=True, default=None)
-    user_agent = Column(String(255), nullable=True, default=None)
-    ip_address = Column(String(80), nullable=False)
-
-    @classmethod
-    async def get_or_create(
-            cls,
-            token_session_id,
-            ip_address,
-            fingerprint=None,
-            user_agent=None
-    ) -> tuple["TokenAgent", bool]:
-        is_new = False
-        query = select(cls).where(
-            and_(
-                cls.token_session_id == token_session_id,
-                cls.ip_address == ip_address,
-                cls.fingerprint == fingerprint,
-                cls.user_agent == user_agent
-            )
+    def to_response_schema(self, access_token) -> TokenResponseSchema:
+        return TokenResponseSchema(
+            access_token=access_token,
+            refresh_token=self.refresh_token,
+            token_type=self.token_type,
+            expires_in=self.expires_in
         )
-        agent = None  # await db.fetch_one(query)
-
-        if agent is not None:
-            is_new = True
-            query = insert(cls).values({
-                "token_session_id": token_session_id,
-                "ip_address": ip_address,
-                "fingerprint": fingerprint
-            }).returning(cls)
-            # agent = await db.execute(query)
-
-        return agent, is_new

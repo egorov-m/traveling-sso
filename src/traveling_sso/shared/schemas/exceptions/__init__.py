@@ -4,6 +4,7 @@ from .templates import (
     user_not_found_exception,
     user_role_not_found_exception,
     user_not_specified_exception,
+    user_conflict_exception,
     passport_rf_not_specified_exception,
     foreign_passport_rf_not_specified_exception
 )
@@ -13,6 +14,7 @@ __all__ = (
     user_not_found_exception,
     user_role_not_found_exception,
     user_not_specified_exception,
+    user_conflict_exception,
     passport_rf_not_specified_exception,
     foreign_passport_rf_not_specified_exception
 )

@@ -2,7 +2,7 @@ from typing import Optional
 from enum import StrEnum
 from uuid import UUID
 
-from pydantic import SecretStr, constr, Base64Str, Field
+from pydantic import SecretStr, constr, Field
 
 from ..base import SsoBaseModel
 
@@ -25,7 +25,7 @@ class OAuth2TokenType(StrEnum):
 
 class OAuth2AuthorizeResponseSchema(SsoBaseModel):
     code: Optional[constr(min_length=48, max_length=48)] = None
-    id_token: Optional[SecretStr[Base64Str]] = None
+    id_token: Optional[SecretStr[str]] = None
 
 
 class OAuth2TokenResponseSchema(SsoBaseModel):

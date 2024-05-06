@@ -52,7 +52,7 @@ class User(Base, TimeStampMixin):
         if id:
             self.id = str(id)
         self.email = str(email)
-        self.role = role
+        self.role = str(role)
         self.password_hash = self._get_password_hash(password)
         if username:
             self.username = username

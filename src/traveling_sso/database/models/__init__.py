@@ -1,4 +1,4 @@
-from .custom_auth import Client, TokenSession, TokenAgent
+from .custom_auth import Client, TokenSession
 from .documents import PassportRf, ForeignPassportRf
 from .user import User
 
@@ -6,7 +6,6 @@ from .user import User
 __all__ = (
     Client,
     TokenSession,
-    TokenAgent,
     PassportRf,
     ForeignPassportRf,
     User

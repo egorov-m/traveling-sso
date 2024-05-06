@@ -39,5 +39,5 @@ __all__ = (
     UserRoleType,
     UserSchema,
     CreateUserResponseSchema,
-    InternalCreateUserResponseSchema
+    InternalCreateUserResponseSchema,
 )

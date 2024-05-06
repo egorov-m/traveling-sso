@@ -28,6 +28,12 @@ user_not_specified_exception = SsoException(
     http_status_code=status.HTTP_400_BAD_REQUEST
 )
 
+user_conflict_exception = SsoException(
+    message="User conflict.",
+    error_code=SsoErrorCode.USER_NOT_SPECIFIED,
+    http_status_code=status.HTTP_409_CONFLICT
+)
+
 passport_rf_not_specified_exception = SsoException(
     message="Passport RF not specified.",
     error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,

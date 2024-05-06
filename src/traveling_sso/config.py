@@ -37,17 +37,33 @@ class Settings(BaseSettings):
     ROOT_ADMIN_USER_CLIENT: Optional[dict] = {
         "id": "77961ae0-25f3-4ec0-ac80-6e62d69f4f8c",
         "client_id": "Rh4ZomeoWHFJus8KbspWqJTtXHcMGkLHAZ30qgCD3RK3rTHJ",
-        "client_public_secret": "-----BEGIN PUBLIC KEY-----\nMFwwDQYJKoZIhvcNAQEBBQADSwAwS"
-                                "AJBALSbdETaZPiPf7nGWpha0h4zjIm8OOiD\nArop3DvbDtwwVs9xUK+cA"
-                                "Fk++3c3jfj2Zghcv/Mm2Lenn3SsTnF6OZ8CAwEAAQ==\n-----END PUBLIC KEY-----\n",
-        "client_private_secret": "-----BEGIN PRIVATE KEY-----\nMIIBVgIBADANBgkqhkiG9w0BAQEFAASCAUAwggE8A"
-                                 "gEAAkEAtJt0RNpk+I9/ucZa\nmFrSHjOMibw46IMCuincO9sO3DBWz3FQr5wAWT77dzeN+P"
-                                 "ZmCFy/8ybYt6efdKxO\ncXo5nwIDAQABAkAXOG1odNPKiViYoAIB2JtvOp11D/gZHM769Gr"
-                                 "WX0G32V/HsBIc\nnGXGDUxjZJ+XwfmAoWNsOVyfDYImnFh7r2URAiEA5WFDLkd+v4evsUOyt"
-                                 "EcFOdTZ\ngoYYtAUkUrbjMWSvnLUCIQDJkS9bFD56xioLC88imcViUuaWhKsxgYhtnHi/9UeF\n"
-                                 "gwIhANCwGbf8MfO9Vfo3tllQGBASd8XJjKYT24UpgTAKA7/VAiEAlFDXVp5TxwVP\nZGdhF+WsH"
-                                 "sg/Udv3F+tnVrg/BYhXAz8CIQDNiEDhdct/2OpxUUJSC1fzhhxfjXo/\nfEcFr2WR5oN9Ww==\n"
-                                 "-----END PRIVATE KEY-----\n",
+        "client_public_secret": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA"
+                                "1OC6GKv+z0FMIw+yx2B7\nKp8HE++UVc7oaOraWHy1DwuBrc29P9+fFBysxWbxvWY5npgTarC9"
+                                "hsPMJ3mV4QpS\nTTa6PVaxhUnzx5MsYcPCZ3DJ7DUk50Vdpoi12NywPZL5JU1d12VbDtGO1CiOJNL"
+                                "K\n1CPz0gxl5BnChSpDIuPa3k1B9okHH507KCiZVRPkA5bTuUbcq7u0CUkvQ3PY/VkJ\ncyEjgnr6Wb"
+                                "tEmDT98hHrgMTbwNOpESKoK6A9y4+am/7jp+K/tSFZ7s6ExnP0BvD5\num8+qfTFRKQjLdOwjSWFMlo9Nm"
+                                "iaelD7EUvT+LJCeXXI8cZe7Xg8EfWLzvUhaMMB\ndQIDAQAB\n-----END PUBLIC KEY-----\n",
+        "client_private_secret": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD"
+                                 "U4LoYq/7PQUwj\nD7LHYHsqnwcT75RVzuho6tpYfLUPC4Gtzb0/358UHKzFZvG9ZjmemBNqsL2Gw8wn\n"
+                                 "eZXhClJNNro9VrGFSfPHkyxhw8JncMnsNSTnRV2miLXY3LA9kvklTV3XZVsO0Y7U\nKI4k0srUI/PSDGXk"
+                                 "GcKFKkMi49reTUH2iQcfnTsoKJlVE+QDltO5Rtyru7QJSS9D\nc9j9WQlzISOCevpZu0SYNP3yEeuAxNvA0"
+                                 "6kRIqgroD3Lj5qb/uOn4r+1IVnuzoTG\nc/QG8Pm6bz6p9MVEpCMt07CNJYUyWj02aJp6UPsRS9P4skJ5dcj"
+                                 "xxl7teDwR9YvO\n9SFowwF1AgMBAAECggEAH/MKeyF1QM3gC3MTtfC5C5CKk2dlr+s53mVBF/6/fd6Q\nO/G"
+                                 "g8bEyQuZ617W3mmF5TGAuqdiU2WERhussn3XZHFWWZhZY1lRfDhj8lD+5MaUv\n6Q+g1kUG5TOnd0DIArXIR"
+                                 "tzxtJ41qGezNAxSKRyp7GTo9yF9OVrUYwAQy2+/LZXM\nrDdfkF1Jk5sCWcgqkRrgFHt7JyCkAHj+Vexz/0K"
+                                 "ydKOFTBXuJHSTc9v1fz/orXRs\nCYEfAhELyaaAfqTZS6VkYnNKggHa9Drjg5u7g7WoueSMa3luvxa3en0fe"
+                                 "+HIqe6e\nT9jLR+C4dLoHuSD4XOR6b7ahjvIMXS4qo1pUhaR0kQKBgQDytiLtyyCXQ2GUMoRb\nmauTHjDWg"
+                                 "HdlH5/yOcv+6NAe6UbpcFVVKruGvjeuaUKtDkXfQMH+zvYI2Yj09NII\noVd4KSLFUaV4BGGvz2vcULfwifY"
+                                 "lxnxxke+8mRr+H+unFmbxRXt/5YR4HFekfREz\ntDDGik3VANznXNfDz3ZGizpeGwKBgQDgiHCemCJuxpIvz"
+                                 "GX8JeY5cGnXC2pUgWx4\ngt5AAj70jNHztF3OI8nrpb4vsrpsoqtMF56CTWqfQB/5RV8lfIKQqmEcgIU6JP1"
+                                 "W\n7hkVv4/Zn7sKhWmxsYV8TtmLJuurNURj0leGNfUAKQwDrPU94fs2+TGBI2Ch3wF4\nAQgtAbzXrwKBgQC"
+                                 "PmL71nXY8yDrVKUYxw6tFMVmHrx30kE9bSmKtACUSBMZVmoaC\nCvRD9gqPf+tY49bnDTM5hE0AU2O6OZaCU"
+                                 "KKljwDpaTLS3RTGpZuVD5SkFZuyIcrC\njqseFB9qNox/oLtrB8bXln1Xar1Xrj8dLgCllnISEZ6gq8dkLDw"
+                                 "35Gu1/QKBgQDT\n0ML1Si3JdPg5sUhQe2xZqWufW3x+pe2vLj3+AmBjkWkKz49ixS5aaGwnUSM/EqIo\nUWv"
+                                 "OHrxD6VmAbWoZ0gDV+nVMTw3f0T9RP6JYevN4aJApl7wizoZPw47ED/5o8AJJ\nbQf2a3ZqJU7ZNNPSAhpcP"
+                                 "O7vlXE2o0sea1LMKoR8rwKBgAwv44qxhF9RjEqRn5PZ\naB178i/n216F+dXpGM0LrTup2TRnN8whjOB8pasl"
+                                 "5aelf60ja8DRcl7Ef1NKx7XE\nFjgqXONMAjJ46cAhNJUpaSN9Ck7XHPVY3Klq70eY/l1TWx2DMTzTpOzMZCE"
+                                 "FzSig\nrUueu/4b/Zovp0ELp/eld1Yz\n-----END PRIVATE KEY-----\n",
         "client_id_issued_at": 1714913401,
         "client_secret_expires_at": 4868513467
     }
@@ -91,7 +107,9 @@ class Settings(BaseSettings):
 
     AUTH_PASSWORD_SALT: str = "password-salt"
 
-    CLIENT_SECRET_KEY_SIZE: int = Field(512, ge=512)
+    ACCESS_TOKEN_EXPIRES_IN: int = 10800  # 60 * 60 * 3
+    REFRESH_TOKEN_EXPIRES_IN: int = 31104000  # 60 * 60 * 24 * 30 * 12
+    CLIENT_SECRET_KEY_SIZE: int = Field(2048, ge=512)
     CLIENT_SECRET_EXPIRES_DAYS_IN: int = 1095  # 3 years
     CSRF_SECRET: Optional[str] = None
 

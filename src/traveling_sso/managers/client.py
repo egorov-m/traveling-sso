@@ -13,13 +13,13 @@ from ..database.utils import utcnow
 from ..config import settings
 
 
-async def get_client_by_client_id(*, session: AsyncSession, client_id) -> ClientSchema:
+async def get_client_by_client_id(*, session: AsyncSession, client_id) -> Client:
     query = select(Client).where(Client.client_id == str(client_id))
     client = (await session.execute(query)).scalar()
     if client is None:
         raise client_not_found_exception
 
-    return client.to_schema()
+    return client
 
 
 async def _get_client_by_uuid_id(session: AsyncSession, uuid_id: str):
