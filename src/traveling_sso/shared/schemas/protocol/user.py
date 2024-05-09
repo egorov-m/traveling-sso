@@ -3,7 +3,7 @@ from enum import StrEnum
 from typing import Optional
 from uuid import UUID
 
-from pydantic import EmailStr, Secret, constr
+from pydantic import EmailStr, constr
 from uuid_extensions import uuid7
 
 from ..base import SsoBaseModel
@@ -16,7 +16,7 @@ class UserRoleType(StrEnum):
 
 class CreateUserResponseSchema(SsoBaseModel):
     email: EmailStr
-    password: Secret[constr(min_length=8, max_length=255)]
+    password: constr(min_length=8, max_length=255)
     username: Optional[str] = None
 
 

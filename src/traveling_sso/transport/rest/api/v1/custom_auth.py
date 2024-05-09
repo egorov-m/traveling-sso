@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Query, Form, Depends
+from fastapi import APIRouter, Query, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -26,7 +26,7 @@ async def signin(
 ):
     kwargs = {
         "session": session,
-        "password": signin_form.password.get_secret_value(),
+        "password": signin_form.password,
         "client_id": client_id,
     }
     if signin_form.is_email():
@@ -57,7 +57,7 @@ async def signup(
 ):
     am = CustomAuthManager(
         session=session,
-        password=signup_form.password.get_secret_value(),
+        password=signup_form.password,
         client_id=client_id,
         email=signup_form.email
     )

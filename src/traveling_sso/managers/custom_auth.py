@@ -1,4 +1,3 @@
-from pydantic import Secret
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,7 +21,7 @@ class CustomAuthManager:
             self,
             *,
             session: AsyncSession,
-            password: Secret,
+            password: str,
             client_id: str | None = None,
             email: str | None = None,
             username: str | None = None,

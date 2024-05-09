@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import StrEnum
 from uuid import UUID
 
-from pydantic import Secret, EmailStr, constr, Field
+from pydantic import EmailStr, constr, Field
 
 from .user import UserSchema
 from ..base import SsoBaseModel
@@ -13,8 +13,8 @@ class TokenType(StrEnum):
 
 
 class TokenResponseSchema(SsoBaseModel):
-    access_token: Secret[str]
-    refresh_token: Secret[UUID]
+    access_token: str
+    refresh_token: UUID
     token_type: TokenType = TokenType.Bearer
     expires_in: int = Field(..., description="Expires of refresh token.")
 
@@ -34,7 +34,7 @@ class SignInFormSchema(SsoBaseModel):
     login: EmailStr | constr(
         pattern=r"^[a-zA-Z][a-zA-Z0-9_]*$"
     ) = Field(..., description="Username or email for login")
-    password: Secret[constr(min_length=8, max_length=255)]
+    password: constr(min_length=8, max_length=255)
 
     def is_email(self):
         return "@" in self.login
@@ -42,4 +42,4 @@ class SignInFormSchema(SsoBaseModel):
 
 class SignUpFormSchema(SsoBaseModel):
     email: EmailStr
-    password: Secret[constr(min_length=8, max_length=255)]
+    password: constr(min_length=8, max_length=255)
