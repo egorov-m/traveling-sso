@@ -7,15 +7,14 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from traveling_sso.config import settings
-from traveling_sso.database import Base
 from traveling_sso.database.models import (
+    Client,
+    TokenSession,
     PassportRf,
     ForeignPassportRf,
-    User,
-    OAuth2Client,
-    OAuth2AuthorizationCode,
-    OAuth2Token
+    User
 )
+from traveling_sso.database import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

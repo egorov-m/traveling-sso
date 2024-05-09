@@ -11,7 +11,7 @@ from starlette.responses import JSONResponse
 
 from traveling_sso.shared.schemas.exceptions import SsoException, SsoErrorCode
 from .config import settings
-from .database import db
+from .database.deps import db_init_root_user
 from .shared.schemas.protocol.error import SsoErrorsSchema, SsoErrorSchema
 from .transport.rest import app_router
 
@@ -25,19 +25,6 @@ app = FastAPI(
     redoc_url=f"{settings.API_V1_STR}/redoc",
     servers=settings.API_SERVERS
 )
-
-# authorization server configuration
-app.config = {
-    "OAUTH2_JWT_ISS": "https://authlib.org",
-    "OAUTH2_JWT_KEY": "secret-key",
-    "OAUTH2_JWT_ALG": "HS256",
-    "OAUTH2_TOKEN_EXPIRES_IN": {
-        "authorization_code": 300
-    },
-    "OAUTH2_ERROR_URIS": [
-        ("invalid_client", "https://developer.example.com/errors#invalid-client"),
-    ]
-}
 
 app.include_router(app_router, prefix=settings.API_V1_STR)
 
@@ -120,9 +107,5 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 @app.on_event("startup")
 async def startup():
-    await db.connect()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await db.disconnect()
+    if settings.INIT_ROOT_ADMIN_USER:
+        await db_init_root_user()

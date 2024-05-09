@@ -1,12 +1,20 @@
 from re import split
 
-from databases import Database
 from sqlalchemy import Column, DateTime, event
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import declared_attr
+from sqlalchemy.orm import declared_attr, sessionmaker
 
 from ..config import settings
 from .utils import utcnow
+
+
+engine: AsyncEngine = create_async_engine(url=settings.get_db_url(),
+                                          pool_pre_ping=True,
+                                          pool_size=settings.DB_POOL_SIZE,
+                                          max_overflow=settings.DB_MAX_OVERFLOW)
+
+get_session: sessionmaker = sessionmaker(engine, class_=AsyncSession)
 
 
 class TimeStampMixin:
@@ -39,4 +47,3 @@ class CustomBase:
 
 
 Base = declarative_base(cls=CustomBase)
-db = Database(settings.get_db_url())
