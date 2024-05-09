@@ -1,19 +1,13 @@
-from uuid import UUID
-
+from authlib.jose import RSAKey
+from cryptography.hazmat.primitives import serialization
 from sqlalchemy import (
     Column,
     Uuid,
-    String,
-    ForeignKey,
-    insert,
-    UniqueConstraint,
-    and_
+    ForeignKey
 )
-from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 from uuid_extensions import uuid7
 
-from traveling_sso.shared.schemas.exceptions import user_not_found_exception
 from traveling_sso.shared.schemas.protocol import ClientSchema, TokenResponseSchema
 from ... import TimeStampMixin, Base
 from .mixins import ClientMixin, TokenMixin
@@ -30,10 +24,16 @@ class Client(Base, TimeStampMixin, ClientMixin):
     user = relationship("User", foreign_keys=[user_id])
 
     def to_schema(self) -> ClientSchema:
+        rsa_public_key = RSAKey.import_key(self.client_private_secret).get_public_key()
+        client_public_secret = rsa_public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        ).decode("utf-8")
+
         return ClientSchema(
             id=self.id,
             client_id=self.client_id,
-            client_public_secret=self.client_public_secret,
+            client_public_secret=client_public_secret,
             client_id_issued_at=self.client_id_issued_at,
             client_secret_expires_at=self.client_secret_expires_at,
             user=self.user.to_schema(),
@@ -45,7 +45,6 @@ class Client(Base, TimeStampMixin, ClientMixin):
             self,
             *,
             client_id: str,
-            client_public_secret: str,
             client_private_secret: str,
             client_id_issued_at: int,
             client_secret_expires_at: int,
@@ -53,7 +52,6 @@ class Client(Base, TimeStampMixin, ClientMixin):
             **kwargs
     ):
         self.client_id = client_id
-        self.client_public_secret = client_public_secret
         self.client_private_secret = client_private_secret
         self.client_id_issued_at = client_id_issued_at
         self.client_secret_expires_at = client_secret_expires_at

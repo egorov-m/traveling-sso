@@ -37,12 +37,6 @@ class Settings(BaseSettings):
     ROOT_ADMIN_USER_CLIENT: Optional[dict] = {
         "id": "77961ae0-25f3-4ec0-ac80-6e62d69f4f8c",
         "client_id": "Rh4ZomeoWHFJus8KbspWqJTtXHcMGkLHAZ30qgCD3RK3rTHJ",
-        "client_public_secret": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA"
-                                "1OC6GKv+z0FMIw+yx2B7\nKp8HE++UVc7oaOraWHy1DwuBrc29P9+fFBysxWbxvWY5npgTarC9"
-                                "hsPMJ3mV4QpS\nTTa6PVaxhUnzx5MsYcPCZ3DJ7DUk50Vdpoi12NywPZL5JU1d12VbDtGO1CiOJNL"
-                                "K\n1CPz0gxl5BnChSpDIuPa3k1B9okHH507KCiZVRPkA5bTuUbcq7u0CUkvQ3PY/VkJ\ncyEjgnr6Wb"
-                                "tEmDT98hHrgMTbwNOpESKoK6A9y4+am/7jp+K/tSFZ7s6ExnP0BvD5\num8+qfTFRKQjLdOwjSWFMlo9Nm"
-                                "iaelD7EUvT+LJCeXXI8cZe7Xg8EfWLzvUhaMMB\ndQIDAQAB\n-----END PUBLIC KEY-----\n",
         "client_private_secret": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD"
                                  "U4LoYq/7PQUwj\nD7LHYHsqnwcT75RVzuho6tpYfLUPC4Gtzb0/358UHKzFZvG9ZjmemBNqsL2Gw8wn\n"
                                  "eZXhClJNNro9VrGFSfPHkyxhw8JncMnsNSTnRV2miLXY3LA9kvklTV3XZVsO0Y7U\nKI4k0srUI/PSDGXk"

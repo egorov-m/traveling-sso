@@ -58,7 +58,6 @@ async def create_or_update_client(
         *,
         session: AsyncSession,
         client_id: str,
-        client_public_secret: str,
         client_private_secret: str,
         client_id_issued_at: int,
         client_secret_expires_at: int,
@@ -71,7 +70,6 @@ async def create_or_update_client(
         if client is not None:
             _update_client_fields(client, {
                 "client_id": client_id,
-                "client_public_secret": client_public_secret,
                 "client_private_secret": client_private_secret,
                 "client_id_issued_at": client_id_issued_at,
                 "client_secret_expires_at": client_secret_expires_at,
@@ -81,7 +79,6 @@ async def create_or_update_client(
         keys = _generate_pair_keys()
         client = Client(
             client_id=client_id or generate_token(48),
-            client_public_secret=client_public_secret or keys[0],
             client_private_secret=client_private_secret or keys[1],
             client_id_issued_at=client_id_issued_at or int(utcnow().timestamp()),
             client_secret_expires_at=client_secret_expires_at or int(

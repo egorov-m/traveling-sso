@@ -74,9 +74,8 @@ async def db_init_root_user():
 
         if settings.ROOT_ADMIN_USER_CLIENT is not None:
             client_required_keys = (
-                "id", "client_id", "client_public_secret",
-                "client_private_secret", "client_id_issued_at",
-                "client_secret_expires_at"
+                "id", "client_id", "client_private_secret",
+                "client_id_issued_at", "client_secret_expires_at"
             )
             if all(key in settings.ROOT_ADMIN_USER_CLIENT for key in client_required_keys):
                 await create_or_update_client(
