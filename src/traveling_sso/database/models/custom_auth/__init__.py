@@ -76,5 +76,5 @@ class TokenSession(Base, TimeStampMixin, TokenMixin):
             access_token=access_token,
             refresh_token=self.refresh_token,
             token_type=self.token_type,
-            expires_in=self.expires_in
+            expires=self.issued_at + self.expires_in
         )

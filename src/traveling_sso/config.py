@@ -106,9 +106,11 @@ class Settings(BaseSettings):
     }
 
     AUTH_PASSWORD_SALT: str = "password-salt"
-
+    SSO_ISSUERS: list[str] = ["http://localhost:33380", "http://127.0.0.1:33380"]
     ACCESS_TOKEN_EXPIRES_IN: int = 10800  # 60 * 60 * 3
     REFRESH_TOKEN_EXPIRES_IN: int = 31104000  # 60 * 60 * 24 * 30 * 12
+    REFRESH_TOKEN_COOKIE_NAME: str = "sso_refresh_token"
+    CLIENT_ID_HEADER_NAME: str = "x-sso-client-id"
     CLIENT_SECRET_KEY_SIZE: int = Field(2048, ge=512)
     CLIENT_SECRET_EXPIRES_DAYS_IN: int = 1095  # 3 years
     CSRF_SECRET: Optional[str] = None
