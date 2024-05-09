@@ -45,3 +45,27 @@ foreign_passport_rf_not_specified_exception = SsoException(
     error_code=SsoErrorCode.DOCUMENT_FOREIGN_PASSPORT_RF_NOT_SPECIFIED,
     http_status_code=status.HTTP_400_BAD_REQUEST
 )
+
+auth_unauthorized_exception = SsoException(
+    message="Could not validate credentials.",
+    error_code=SsoErrorCode.AUTH_UNAUTHORIZED,
+    http_status_code=status.HTTP_401_UNAUTHORIZED
+)
+
+auth_access_denied_exception = SsoException(
+    message="Access denied.",
+    error_code=SsoErrorCode.AUTH_FORBIDDEN,
+    http_status_code=status.HTTP_403_FORBIDDEN
+)
+
+auth_access_token_no_valid_exception = SsoException(
+    message="Access token no valid.",
+    error_code=SsoErrorCode.AUTH_ACCESS_TOKEN_NO_VALID,
+    http_status_code=status.HTTP_403_FORBIDDEN
+)
+
+auth_refresh_token_no_valid_exception = SsoException(
+    message="Refresh token no valid.",
+    error_code=SsoErrorCode.AUTH_REFRESH_TOKEN_NO_VALID,
+    http_status_code=status.HTTP_403_FORBIDDEN
+)

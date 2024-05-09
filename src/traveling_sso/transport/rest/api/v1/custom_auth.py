@@ -20,7 +20,7 @@ custom_auth_router = APIRouter()
     description=""
 )
 async def signin(
-       signin_form: SignInFormSchema,
+        signin_form: SignInFormSchema,
         client_id: Annotated[str, Query(min_length=48, max_length=48, description="")],
         session: AsyncSession = Depends(get_db),
 ):

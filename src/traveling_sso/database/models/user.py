@@ -35,7 +35,9 @@ class User(Base, TimeStampMixin):
             username=self.username,
             role=self.role,
             created_at=self.created_at,
-            updated_at=self.updated_at
+            updated_at=self.updated_at,
+            is_passport_rf=bool(self.foreign_passport_rf_id),
+            is_foreign_passport=bool(self.foreign_passport_rf_id)
         )
 
     def __init__(

@@ -9,7 +9,7 @@ class SsoErrorCode(IntEnum):
 
     Ranges:
             0-999: general errors
-        1000-1999: oauth errors
+        1000-1999: auth errors
         2000-2999: client errors
         3000-3999: user errors
         4000-4999: documents errors
@@ -19,7 +19,11 @@ class SsoErrorCode(IntEnum):
     GENERIC_ERROR = 0
     BASE_NOT_FOUND = 1
 
-    # 1000-1999: oauth errors
+    # 1000-1999: auth errors
+    AUTH_UNAUTHORIZED = 1000
+    AUTH_FORBIDDEN = 1001
+    AUTH_ACCESS_TOKEN_NO_VALID = 1002
+    AUTH_REFRESH_TOKEN_NO_VALID = 1003
 
     # 2000-2999: client errors
     CLIENT_NOT_FOUND = 2000

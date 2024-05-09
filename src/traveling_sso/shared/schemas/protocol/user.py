@@ -34,3 +34,5 @@ class UserSchema(SsoBaseModel):
     role: UserRoleType
     created_at: datetime
     updated_at: datetime
+    is_passport_rf: bool = False
+    is_foreign_passport: bool = False

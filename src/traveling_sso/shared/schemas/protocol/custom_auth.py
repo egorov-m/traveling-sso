@@ -16,7 +16,7 @@ class TokenResponseSchema(SsoBaseModel):
     access_token: str
     refresh_token: UUID
     token_type: TokenType = TokenType.Bearer
-    expires_in: int = Field(..., description="Expires of refresh token.")
+    expires: int = Field(..., description="Expires of refresh token.")
 
 
 class ClientSchema(SsoBaseModel):
