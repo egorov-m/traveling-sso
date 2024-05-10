@@ -1,7 +1,7 @@
 from uuid import uuid4
 
-from authlib.jose import jwt, RSAKey, JWTClaims as _JWTClaims
-from authlib.jose.errors import JoseError, ExpiredTokenError
+from authlib.jose import RSAKey, JWTClaims as _JWTClaims, JsonWebToken
+from authlib.jose.errors import JoseError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from traveling_sso.shared.schemas.protocol import TokenResponseSchema
@@ -10,11 +10,15 @@ from ..database.models import Client, TokenSession, User
 from ..database.utils import utcnow
 from ..shared.schemas.exceptions.templates import auth_access_token_no_valid_exception
 
+__algorithm__ = "RS512"
+__separator__ = ":"
+jwt = JsonWebToken([__algorithm__])
+
 
 class JWTClaims(_JWTClaims):
 
     _sso_options = {
-        "iss": {"values": settings.SSO_ISSUERS},
+        "iss": {"value": settings.SSO_ISSUERS},
         "sub": {"essential": True},
         "aud": {"essential": True},
         "exp": {"value": settings.ACCESS_TOKEN_EXPIRES_IN},
@@ -53,7 +57,7 @@ class JWTClaims(_JWTClaims):
                 "user_role": user_role
             },
             header={
-                "alg": "RS512",
+                "alg": __algorithm__,
                 "typ": "JWT"
             }
         )
@@ -85,20 +89,23 @@ def generate_access_token(user_id, user_role, client_id, secret):
     claims = JWTClaims.factory_claims(user_id, client_id, user_role)
     token = jwt.encode(claims.header, claims, RSAKey.import_key(secret).get_private_key())
 
-    return token.decode("utf-8")
+    return f"{client_id}{__separator__}{token.decode('utf-8')}"
 
 
 def validate_access_token(
         *,
         client: Client,
-        token: str,
+        jwt_token: str,
 ):
+    assert len(jwt_token.split(__separator__)) == 1, "Only the jwt token itself needs to be passed for validation."
+
     try:
         decode_token = jwt.decode(
-            token,
+            jwt_token,
             client.client_private_secret,
             claims_cls=JWTClaims
         )
+        decode_token.validate(int(utcnow().timestamp()))
     except JoseError as error:
         raise auth_access_token_no_valid_exception from error
 
@@ -106,3 +113,16 @@ def validate_access_token(
         raise auth_access_token_no_valid_exception
 
     return decode_token
+
+
+def split_access_token(access_token: str) -> tuple[str, str]:
+    """
+        Access token split in the format: <client_id>:<jwt_token>
+        :param access_token:
+        :return: tuple[<client_id>, <jwt_token>]
+    """
+    s = access_token.split(__separator__)
+    if len(s) != 2:
+        raise auth_access_token_no_valid_exception
+
+    return s[0], s[1]
