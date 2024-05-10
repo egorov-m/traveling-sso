@@ -18,6 +18,7 @@ class SsoErrorCode(IntEnum):
     # 0-999: general errors
     GENERIC_ERROR = 0
     BASE_NOT_FOUND = 1
+    VALIDATION_ERROR = 2
 
     # 1000-1999: auth errors
     AUTH_UNAUTHORIZED = 1000
