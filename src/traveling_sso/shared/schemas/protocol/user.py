@@ -36,3 +36,8 @@ class UserSchema(SsoBaseModel):
     updated_at: datetime
     is_passport_rf: bool = False
     is_foreign_passport: bool = False
+
+
+class UserSessionSchema(UserSchema):
+    session_id: UUID
+    client_id: str

@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 from uuid_extensions import uuid7
 
 from traveling_sso.shared.schemas.protocol import ClientSchema, TokenResponseSchema
+from traveling_sso.shared.schemas.protocol.custom_auth import TokenSessionSchema
 from ... import TimeStampMixin, Base
 from .mixins import ClientMixin, TokenMixin
 
@@ -75,4 +76,12 @@ class TokenSession(Base, TimeStampMixin, TokenMixin):
             refresh_token=self.refresh_token,
             token_type=self.token_type,
             expires=self.issued_at + self.expires_in
+        )
+
+    def to_token_session_schema(self, is_current: bool = False) -> TokenSessionSchema:
+        return TokenSessionSchema(
+            session_id=self.id,
+            issued_at=self.issued_at,
+            expires_at=self.issued_at + self.expires_in,
+            is_current=is_current
         )

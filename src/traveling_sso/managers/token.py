@@ -1,14 +1,18 @@
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from authlib.jose import RSAKey, JWTClaims as _JWTClaims, JsonWebToken
 from authlib.jose.errors import JoseError
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from traveling_sso.shared.schemas.protocol import TokenResponseSchema
+from traveling_sso.shared.schemas.protocol import TokenResponseSchema, UserSchema, UserRoleType, TokenSessionSchema
+from traveling_sso.shared.schemas.exceptions.templates import (
+    auth_access_token_no_valid_exception,
+    auth_refresh_token_not_found_exception
+)
 from ..config import settings
 from ..database.models import Client, TokenSession, User
 from ..database.utils import utcnow
-from ..shared.schemas.exceptions.templates import auth_access_token_no_valid_exception
 
 __algorithm__ = "RS512"
 __separator__ = ":"
@@ -27,7 +31,8 @@ class JWTClaims(_JWTClaims):
         "jti": {"essential": True},
 
         # custom claims
-        "user_role": {"essential": True}
+        "user_role": {"essential": True},
+        "session_id": {"essential": True}
     }
 
     def __init__(self, payload, header, options=None, params=None):
@@ -43,7 +48,7 @@ class JWTClaims(_JWTClaims):
         )
 
     @classmethod
-    def factory_claims(cls, user_id, client_id, user_role) -> "JWTClaims":
+    def factory_claims(cls, user_id, client_id, user_role, session_id) -> "JWTClaims":
         now = int(utcnow().timestamp())
         return cls(
             payload={
@@ -54,7 +59,8 @@ class JWTClaims(_JWTClaims):
                 "ndf": now,
                 "iat": now,
                 "jti": str(uuid4()),
-                "user_role": user_role
+                "user_role": user_role,
+                "session_id": str(session_id)
             },
             header={
                 "alg": __algorithm__,
@@ -81,12 +87,59 @@ async def create_token_session(
     session.add(token)
     await session.flush()
     return token.to_response_schema(access_token=generate_access_token(
-        str(user.id), user.role, client.client_id, client.client_private_secret
+        str(user.id), user.role, client.client_id, client.client_private_secret, token.id
     ))
 
 
-def generate_access_token(user_id, user_role, client_id, secret):
-    claims = JWTClaims.factory_claims(user_id, client_id, user_role)
+async def get_token_session_by_session_id(*, session: AsyncSession, session_id: str) -> TokenSession:
+    token = await session.get(TokenSession, session_id)
+    if token is None:
+        raise auth_refresh_token_not_found_exception
+
+    return token
+
+
+async def get_token_sessions_by_user_id(
+        *,
+        session: AsyncSession,
+        user_id,
+        current_session_id=None,
+        client_id=None
+) -> TokenSessionSchema:
+    whereclause = [
+        TokenSession.user_id == str(user_id),
+        TokenSession.refresh_token_revoked_at.is_(None),
+        TokenSession.issued_at + TokenSession.expires_in > int(utcnow().timestamp())
+    ]
+    if client_id is not None:
+        whereclause.append(
+            TokenSession.client_id == str(client_id)
+        )
+    query = select(TokenSession).where(*whereclause)
+    tokens = (await session.execute(query)).scalars().all()
+
+    return [token.to_token_session_schema(token.id == current_session_id) for token in tokens]
+
+
+async def revoke_token_session(
+        *,
+        session: AsyncSession,
+        user: UserSchema,
+        session_id: str | UUID
+) -> bool:
+    session_id = str(session_id)
+    token = await get_token_session_by_session_id(session=session, session_id=session_id)
+    if str(user.id) != token.user_id and user.role != UserRoleType.admin:
+        raise auth_refresh_token_not_found_exception
+    token.refresh_token_revoked_at = int(utcnow().timestamp())
+    session.add(token)
+    await session.commit()
+
+    return True
+
+
+def generate_access_token(user_id, user_role, client_id, secret, session_id):
+    claims = JWTClaims.factory_claims(user_id, client_id, user_role, session_id)
     token = jwt.encode(claims.header, claims, RSAKey.import_key(secret).get_private_key())
 
     return f"{client_id}{__separator__}{token.decode('utf-8')}"

@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Query, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,8 +7,10 @@ from starlette import status
 
 from traveling_sso.database.deps import get_db
 from traveling_sso.managers.custom_auth import CustomAuthManager
-from traveling_sso.shared.schemas.protocol import TokenResponseSchema, SignInFormSchema
+from traveling_sso.managers.token import revoke_token_session
+from traveling_sso.shared.schemas.protocol import TokenResponseSchema, SignInFormSchema, UserSessionSchema
 from traveling_sso.shared.schemas.protocol.custom_auth import SignUpFormSchema
+from traveling_sso.transport.rest.app_deps import AuthSsoUser
 
 custom_auth_router = APIRouter()
 
@@ -63,3 +66,45 @@ async def signup(
     )
 
     return await am.signup()
+
+
+@custom_auth_router.post(
+    "/logout",
+    response_model=bool,
+    status_code=status.HTTP_200_OK,
+    summary="Logout session",
+    description="A refresh token revoke will be performed, similar to `/session/revoke`."
+)
+async def logout(
+        session: AsyncSession = Depends(get_db),
+        user: UserSessionSchema = Depends(AuthSsoUser())
+):
+    return await revoke_token_session(
+        session=session,
+        user=user,
+        session_id=user.session_id
+    )
+
+
+@custom_auth_router.post(
+    "/session/revoke",
+    response_model=bool,
+    status_code=status.HTTP_200_OK,
+    summary="Revoke refresh token",
+)
+async def revoke_session(
+        session_id: Annotated[UUID | None, Query(
+            ...,
+            description="Pass the session_id you want to revoke, otherwise the current token will be revoked.")
+        ] = None,
+        session: AsyncSession = Depends(get_db),
+        user: UserSessionSchema = Depends(AuthSsoUser())
+):
+    if session_id is None:
+        session_id = user.session_id
+
+    return await revoke_token_session(
+        session=session,
+        user=user,
+        session_id=session_id
+    )

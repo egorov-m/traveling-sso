@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from traveling_sso.database.deps import get_db
+from traveling_sso.managers.token import get_token_sessions_by_user_id
 from traveling_sso.shared.schemas.protocol import (
     UserSchema,
     PassportRfSchema,
@@ -10,7 +11,9 @@ from traveling_sso.shared.schemas.protocol import (
     CreatePassportRfResponseSchema,
     UpdatePassportRfResponseSchema,
     CreateForeignPassportRfResponseSchema,
-    UpdateForeignPassportRfResponseSchema
+    UpdateForeignPassportRfResponseSchema,
+    TokenSessionSchema,
+    UserSessionSchema
 )
 from traveling_sso.transport.rest.app_deps import AuthSsoUser
 
@@ -157,13 +160,17 @@ async def update_foreign_passport_rf(
 
 @user_router.get(
     "/sessions",
-    response_model=list,
+    response_model=list[TokenSessionSchema],
     status_code=status.HTTP_200_OK,
     summary="Get user sessions"
 )
 async def get_sessions(
         session: AsyncSession = Depends(get_db),
-        user: UserSchema = Depends(AuthSsoUser())
+        user: UserSessionSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    ...
+    return await get_token_sessions_by_user_id(
+        session=session,
+        user_id=user.id,
+        current_session_id=user.session_id,
+        client_id=user.client_id,
+    )

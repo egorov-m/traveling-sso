@@ -12,8 +12,7 @@ from traveling_sso.shared.schemas.exceptions.templates import (
     auth_access_denied_exception,
     auth_access_token_no_valid_exception
 )
-from traveling_sso.shared.schemas.protocol import UserRoleType
-
+from traveling_sso.shared.schemas.protocol import UserRoleType, UserSessionSchema
 
 sso_access_token = HTTPBearer(
     scheme_name="Access token",
@@ -53,6 +52,7 @@ class AuthSsoUser:
                 jwt_token=jwt_token
             )
             user_id = decode_token["sub"]
+            session_id = decode_token["session_id"]
 
             user_schema = await get_user_by_identifier(
                 session=session,
@@ -60,7 +60,7 @@ class AuthSsoUser:
             )
 
             if self.required_role == user_schema.role or user_schema.role == UserRoleType.admin:
-                return user_schema
+                return UserSessionSchema(**user_schema.model_dump(), session_id=session_id, client_id=client_id)
             else:
                 raise auth_access_denied_exception
 

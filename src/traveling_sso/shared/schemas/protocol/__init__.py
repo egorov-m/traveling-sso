@@ -1,6 +1,7 @@
 from .custom_auth import (
     TokenType,
     TokenResponseSchema,
+    TokenSessionSchema,
     ClientSchema,
     SignInFormSchema
 )
@@ -19,6 +20,7 @@ from .error import (
 from .user import (
     UserRoleType,
     UserSchema,
+    UserSessionSchema,
     CreateUserResponseSchema,
     InternalCreateUserResponseSchema
 )
@@ -26,6 +28,7 @@ from .user import (
 __all__ = (
     TokenType,
     TokenResponseSchema,
+    TokenSessionSchema,
     ClientSchema,
     SignInFormSchema,
     PassportRfSchema,
@@ -38,6 +41,7 @@ __all__ = (
     SsoErrorsSchema,
     UserRoleType,
     UserSchema,
+    UserSessionSchema,
     CreateUserResponseSchema,
     InternalCreateUserResponseSchema,
 )

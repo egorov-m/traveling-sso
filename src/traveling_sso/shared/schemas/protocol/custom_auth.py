@@ -19,6 +19,13 @@ class TokenResponseSchema(SsoBaseModel):
     expires: int = Field(..., description="Expires of refresh token.")
 
 
+class TokenSessionSchema(SsoBaseModel):
+    session_id: UUID
+    issued_at: int
+    expires_at: int
+    is_current: bool = False
+
+
 class ClientSchema(SsoBaseModel):
     id: UUID
     client_id: str
