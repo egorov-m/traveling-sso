@@ -33,12 +33,7 @@ Design and development of distributed software systems: semester work - auth, us
 - **Client:**
   - id: `77961ae0-25f3-4ec0-ac80-6e62d69f4f8c`
   - client_id: `Rh4ZomeoWHFJus8KbspWqJTtXHcMGkLHAZ30qgCD3RK3rTHJ`
-  - client_public_secret: `-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA"
-                                "1OC6GKv+z0FMIw+yx2B7\nKp8HE++UVc7oaOraWHy1DwuBrc29P9+fFBysxWbxvWY5npgTarC9"
-                                "hsPMJ3mV4QpS\nTTa6PVaxhUnzx5MsYcPCZ3DJ7DUk50Vdpoi12NywPZL5JU1d12VbDtGO1CiOJNL"
-                                "K\n1CPz0gxl5BnChSpDIuPa3k1B9okHH507KCiZVRPkA5bTuUbcq7u0CUkvQ3PY/VkJ\ncyEjgnr6Wb"
-                                "tEmDT98hHrgMTbwNOpESKoK6A9y4+am/7jp+K/tSFZ7s6ExnP0BvD5\num8+qfTFRKQjLdOwjSWFMlo9Nm"
-                                "iaelD7EUvT+LJCeXXI8cZe7Xg8EfWLzvUhaMMB\ndQIDAQAB\n-----END PUBLIC KEY-----\n`;
+  - client_public_secret: `-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1OC6GKv+z0FMIw+yx2B7\nKp8HE++UVc7oaOraWHy1DwuBrc29P9+fFBysxWbxvWY5npgTarC9hsPMJ3mV4QpS\nTTa6PVaxhUnzx5MsYcPCZ3DJ7DUk50Vdpoi12NywPZL5JU1d12VbDtGO1CiOJNLK\n1CPz0gxl5BnChSpDIuPa3k1B9okHH507KCiZVRPkA5bTuUbcq7u0CUkvQ3PY/VkJ\ncyEjgnr6WbtEmDT98hHrgMTbwNOpESKoK6A9y4+am/7jp+K/tSFZ7s6ExnP0BvD5\num8+qfTFRKQjLdOwjSWFMlo9NmiaelD7EUvT+LJCeXXI8cZe7Xg8EfWLzvUhaMMB\ndQIDAQAB\n-----END PUBLIC KEY-----`;
   - ...
 
 **client_public_secret - \n line breaks* 
