@@ -1,13 +1,16 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Query, Depends
+from fastapi import APIRouter, Query, Depends, Cookie, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
+from starlette.responses import JSONResponse
 
+from traveling_sso.config import settings
 from traveling_sso.database.deps import get_db
 from traveling_sso.managers.custom_auth import CustomAuthManager
 from traveling_sso.managers.token import revoke_token_session
+from traveling_sso.shared.schemas.exceptions.templates import auth_refresh_token_no_valid_exception
 from traveling_sso.shared.schemas.protocol import TokenResponseSchema, SignInFormSchema, UserSessionSchema
 from traveling_sso.shared.schemas.protocol.custom_auth import SignUpFormSchema
 from traveling_sso.transport.rest.app_deps import AuthSsoUser
@@ -38,7 +41,15 @@ async def signin(
         kwargs["username"] = signin_form.login
     am = CustomAuthManager(**kwargs)
 
-    return await am.signin()
+    res = await am.signin()
+    if settings.IS_REFRESH_TOKEN_VIA_COOKIE:
+        return res.to_response_with_cookie(
+            cookie_name=settings.REFRESH_TOKEN_COOKIE_NAME,
+            cookie_max_age=settings.REFRESH_TOKEN_EXPIRES_IN,
+            cookie_path=settings.REFRESH_TOKEN_COOKIE_PATH,
+        )
+    else:
+        return res
 
 
 @custom_auth_router.post(
@@ -65,7 +76,15 @@ async def signup(
         email=signup_form.email
     )
 
-    return await am.signup()
+    res = await am.signup()
+    if res is not None and settings.IS_REFRESH_TOKEN_VIA_COOKIE:
+        return res.to_response_with_cookie(
+            cookie_name=settings.REFRESH_TOKEN_COOKIE_NAME,
+            cookie_max_age=settings.REFRESH_TOKEN_EXPIRES_IN,
+            cookie_path=settings.REFRESH_TOKEN_COOKIE_PATH,
+        )
+    else:
+        return res
 
 
 @custom_auth_router.post(
@@ -108,3 +127,34 @@ async def revoke_session(
         user=user,
         session_id=session_id
     )
+
+
+@custom_auth_router.post(
+    "/session/refresh",
+    response_model=TokenResponseSchema,
+    status_code=status.HTTP_200_OK,
+    summary="Refresh access token"
+)
+async def refresh_session(
+        refresh_token_header: str | None = Header(None, alias=settings.REFRESH_TOKEN_HEADER_NAME, description=""),
+        refresh_token: str | None = Cookie(None, alias=settings.REFRESH_TOKEN_COOKIE_NAME, description=""),
+        session: AsyncSession = Depends(get_db)
+):
+    if refresh_token is None:
+        if refresh_token_header is not None:
+            refresh_token = refresh_token_header
+        else:
+            raise auth_refresh_token_no_valid_exception
+
+    res = await CustomAuthManager.refresh(
+        session=session,
+        refresh_token=refresh_token
+    )
+    if settings.IS_REFRESH_TOKEN_VIA_COOKIE:
+        return res.to_response_with_cookie(
+            cookie_name=settings.REFRESH_TOKEN_COOKIE_NAME,
+            cookie_max_age=settings.REFRESH_TOKEN_EXPIRES_IN,
+            cookie_path=settings.REFRESH_TOKEN_COOKIE_PATH,
+        )
+    else:
+        return res

@@ -39,6 +39,13 @@ def utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def timestamp_to_datetime(v: int) -> datetime:
+    res = datetime.utcfromtimestamp(float(v))
+    res = res.astimezone(timezone.utc)
+
+    return res
+
+
 def unaware_to_utc(d: datetime | None) -> datetime:
     """Set timezeno to UTC if datetime is unaware (tzinfo == None)."""
     if d and d.tzinfo is None:

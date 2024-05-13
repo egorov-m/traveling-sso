@@ -13,6 +13,14 @@ from traveling_sso.shared.schemas.protocol import (
 from ..database.models import User
 
 
+async def get_user_by_id(*, session: AsyncSession, user_id) -> User:
+    user = await session.get(User, str(user_id))
+    if user is None:
+        raise user_not_found_exception
+
+    return user
+
+
 async def get_user_by_identifier(*, session: AsyncSession, identifier) -> UserSchema:
     user = await _get_user_by_identifier(session=session, identifier=str(identifier))
     if user is None:

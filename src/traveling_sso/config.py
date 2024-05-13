@@ -104,6 +104,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRES_IN: int = 10800  # 60 * 60 * 3
     REFRESH_TOKEN_EXPIRES_IN: int = 31104000  # 60 * 60 * 24 * 30 * 12
     REFRESH_TOKEN_COOKIE_NAME: str = "sso_refresh_token"
+    REFRESH_TOKEN_HEADER_NAME: str = "x-sso-refresh-token"
+    REFRESH_TOKEN_COOKIE_PATH: str = "/api/v1/auth/"
+    IS_REFRESH_TOKEN_VIA_COOKIE: bool = True
+    ACTIVE_REFRESH_TOKEN_MAX_COUNT: int = 5
     CLIENT_ID_HEADER_NAME: str = "x-sso-client-id"
     CLIENT_SECRET_KEY_SIZE: int = Field(2048, ge=512)
     CLIENT_SECRET_EXPIRES_DAYS_IN: int = 1095  # 3 years

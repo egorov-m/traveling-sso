@@ -2,13 +2,14 @@ from uuid import uuid4, UUID
 
 from authlib.jose import RSAKey, JWTClaims as _JWTClaims, JsonWebToken
 from authlib.jose.errors import JoseError
-from sqlalchemy import select
+from sqlalchemy import select, update, and_, or_
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql.functions import count
 
 from traveling_sso.shared.schemas.protocol import TokenResponseSchema, UserSchema, UserRoleType, TokenSessionSchema
 from traveling_sso.shared.schemas.exceptions.templates import (
     auth_access_token_no_valid_exception,
-    auth_refresh_token_not_found_exception
+    auth_refresh_token_not_found_exception, auth_refresh_token_no_valid_exception
 )
 from ..config import settings
 from ..database.models import Client, TokenSession, User
@@ -77,6 +78,14 @@ async def create_token_session(
         token_type: str,
         expires_in: int = settings.REFRESH_TOKEN_EXPIRES_IN
 ) -> TokenResponseSchema:
+    current_token_count = await get_count_active_token_session_for_user(session=session, user_id=user.id)
+
+    if current_token_count >= settings.ACTIVE_REFRESH_TOKEN_MAX_COUNT:
+        await revoke_all_active_token_sessions_for_user(
+            session=session,
+            user_id=user.id
+        )
+
     token = TokenSession(
         client_id=client.client_id,
         token_type=token_type,
@@ -87,16 +96,78 @@ async def create_token_session(
     session.add(token)
     await session.flush()
     return token.to_response_schema(access_token=generate_access_token(
-        str(user.id), user.role, client.client_id, client.client_private_secret, token.id
+        str(user.id), user.role, client.client_id, client.client_private_secret, str(token.id)
     ))
 
 
+def _get_active_token_sessions_for_user_whereclause(user_id):
+    current_time = int(utcnow().timestamp())
+    return [
+        TokenSession.user_id == str(user_id),
+        or_(TokenSession.refresh_token_revoked_at > current_time, TokenSession.refresh_token_revoked_at.is_(None)),
+        TokenSession.issued_at + TokenSession.expires_in > current_time
+    ]
+
+
 async def get_token_session_by_session_id(*, session: AsyncSession, session_id: str) -> TokenSession:
-    token = await session.get(TokenSession, session_id)
+    current_time = int(utcnow().timestamp())
+    query = select(TokenSession).where(
+        and_(
+            TokenSession.id == session_id,
+            or_(TokenSession.refresh_token_revoked_at > current_time, TokenSession.refresh_token_revoked_at.is_(None)),
+            TokenSession.issued_at + TokenSession.expires_in > current_time
+        )
+    )
+    token = (await session.execute(query)).scalar()
     if token is None:
         raise auth_refresh_token_not_found_exception
 
     return token
+
+
+async def get_token_session_by_refresh_token(*, session: AsyncSession, refresh_token: str) -> TokenSession:
+    current_time = int(utcnow().timestamp())
+    query = select(TokenSession).where(
+        and_(
+            TokenSession.refresh_token == refresh_token,
+            or_(TokenSession.refresh_token_revoked_at > current_time, TokenSession.refresh_token_revoked_at.is_(None)),
+            TokenSession.issued_at + TokenSession.expires_in > current_time
+        )
+    )
+    token = (await session.execute(query)).scalar()
+
+    if token is None:
+        raise auth_refresh_token_no_valid_exception
+
+    return token
+
+
+async def update_refresh_token(*, session: AsyncSession, token: TokenSession, client: Client, user: User) -> TokenResponseSchema:
+    token.refresh_token = str(uuid4())
+    session.add(token)
+    await session.flush()
+
+    return token.to_response_schema(access_token=generate_access_token(
+        str(token.user_id), user.role, token.client_id, client.client_private_secret, str(token.id)
+    ))
+
+
+async def get_count_active_token_session_for_user(*, session: AsyncSession, user_id) -> int:
+    query = select(count(TokenSession.id)).where(
+        and_(*_get_active_token_sessions_for_user_whereclause(user_id))
+    )
+    tokens_count = (await session.execute(query)).scalar()
+
+    return tokens_count
+
+
+async def revoke_all_active_token_sessions_for_user(*, session: AsyncSession, user_id):
+    current_time = int(utcnow().timestamp())
+    query = update(TokenSession).where(
+        and_(*_get_active_token_sessions_for_user_whereclause(user_id))
+    ).values(refresh_token_revoked_at=current_time)
+    await session.execute(query)
+    await session.flush()
 
 
 async def get_token_sessions_by_user_id(
@@ -106,16 +177,12 @@ async def get_token_sessions_by_user_id(
         current_session_id=None,
         client_id=None
 ) -> TokenSessionSchema:
-    whereclause = [
-        TokenSession.user_id == str(user_id),
-        TokenSession.refresh_token_revoked_at.is_(None),
-        TokenSession.issued_at + TokenSession.expires_in > int(utcnow().timestamp())
-    ]
+    whereclause = _get_active_token_sessions_for_user_whereclause(user_id)
     if client_id is not None:
         whereclause.append(
             TokenSession.client_id == str(client_id)
         )
-    query = select(TokenSession).where(*whereclause)
+    query = select(TokenSession).where(and_(*whereclause))
     tokens = (await session.execute(query)).scalars().all()
 
     return [token.to_token_session_schema(token.id == current_session_id) for token in tokens]

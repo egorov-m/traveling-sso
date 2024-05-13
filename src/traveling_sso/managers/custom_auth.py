@@ -1,9 +1,13 @@
+from uuid import UUID
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from traveling_sso.shared.schemas.exceptions.templates import auth_refresh_token_no_valid_exception
 from traveling_sso.shared.schemas.exceptions import (
     user_conflict_exception,
-    user_not_specified_exception
+    user_not_specified_exception,
+    SsoException
 )
 from traveling_sso.shared.schemas.protocol import (
     InternalCreateUserResponseSchema,
@@ -12,7 +16,8 @@ from traveling_sso.shared.schemas.protocol import (
     TokenType
 )
 from . import create_or_update_user, get_client_by_client_id
-from .token import create_token_session
+from .token import create_token_session, get_token_session_by_refresh_token, update_refresh_token
+from .user import get_user_by_id
 from ..database.models import User
 
 
@@ -33,6 +38,36 @@ class CustomAuthManager:
         self.username = username
 
         assert email is None or username is None, "Only one user identifier can be specified."
+
+    @classmethod
+    async def refresh(
+            cls,
+            *,
+            session: AsyncSession,
+            refresh_token: UUID | str
+    ) -> TokenResponseSchema:
+        token = await get_token_session_by_refresh_token(
+            session=session,
+            refresh_token=str(refresh_token)
+        )
+        try:
+            client = await get_client_by_client_id(
+                session=session,
+                client_id=token.client_id
+            )
+            user = await get_user_by_id(
+                session=session,
+                user_id=token.user_id
+            )
+        except SsoException as error:
+            raise auth_refresh_token_no_valid_exception from error
+
+        return await update_refresh_token(
+            session=session,
+            token=token,
+            client=client,
+            user=user
+        )
 
     async def signup(self) -> TokenResponseSchema | None:
         assert self.email is not None and self.password is not None, \

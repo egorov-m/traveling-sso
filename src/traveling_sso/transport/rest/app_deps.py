@@ -1,8 +1,7 @@
 from fastapi import Depends, Security
-from fastapi.security import HTTPBearer, APIKeyCookie, HTTPAuthorizationCredentials
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from traveling_sso.config import settings
 from traveling_sso.database.deps import get_db
 from traveling_sso.managers import get_client_by_client_id, get_user_by_identifier
 from traveling_sso.managers.token import validate_access_token, split_access_token
@@ -17,12 +16,6 @@ from traveling_sso.shared.schemas.protocol import UserRoleType, UserSessionSchem
 sso_access_token = HTTPBearer(
     scheme_name="Access token",
     description="Access token in jwt format.",
-    auto_error=False
-)
-sso_refresh_token = APIKeyCookie(
-    scheme_name="Refresh token",
-    name=settings.REFRESH_TOKEN_COOKIE_NAME,
-    description="Refresh token to update the access token in UUID format.",
     auto_error=False
 )
 
