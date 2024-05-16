@@ -105,8 +105,8 @@ class CustomAuthManager:
         assert self.client_id is not None, "Requires client id to signin a user."
 
         query = select(User).where(User.email == self.email)
-        user = (await self.session.execute(query)).scalar()
-        if user is None:
+        user: User = (await self.session.execute(query)).scalar()
+        if user is None or not user.check_password(self.password):
             raise user_not_specified_exception
 
         client = await get_client_by_client_id(

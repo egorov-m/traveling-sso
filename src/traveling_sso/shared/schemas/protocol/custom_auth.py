@@ -66,7 +66,7 @@ class SignInFormSchema(SsoBaseModel):
     login: EmailStr | constr(
         pattern=r"^[a-zA-Z][a-zA-Z0-9_]*$"
     ) = Field(..., description="Username or email for login")
-    password: constr(min_length=8, max_length=255)
+    password: str
 
     def is_email(self):
         return "@" in self.login
