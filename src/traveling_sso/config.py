@@ -1,25 +1,30 @@
 from datetime import date
 from functools import lru_cache
-from typing import Optional
+from typing import Optional, Literal
 from pathlib import Path
 from urllib.parse import quote_plus
 
-from pydantic import Field
+from pydantic import Field, IPvAnyAddress
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.API_SERVERS:
+            self.API_SERVERS = self._get_default_api_servers()
+
     PROJECT_NAME: str = "SSO"
     PROJECT_DESCRIPTION: str = "Authorization, authentication, user info microservice."
     PROJECT_VERSION: str = "0.0.1"
     API_V1_STR: str = "/api/v1"
 
-    API_SERVERS: list = [
-        {
-            "url": "http://localhost:33380",
-            "description": "Local server"
-        }
-    ]
+    SSO_PROTOCOL: Literal["http", "https"] = "http"
+    SSO_HOST: str = "0.0.0.0"
+    SSO_PORT: int = Field(80, ge=0, le=65535)
+
+    API_SERVERS: list = []
 
     LOG_LEVEL: str = "INFO"
     LOGGER_NAME: str = "logger.traveling_sso"
@@ -129,6 +134,18 @@ class Settings(BaseSettings):
     def get_db_url(self) -> str:
         return (f"{self.DB_SCHEMA}+{self.DB_DRIVER}://{self.DB_USER}:{quote_plus(self.DB_PASSWORD)}@"
                 f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?ssl={self.DB_SSL}")
+
+    def _get_default_api_servers(self):
+        return [
+            {
+                "url": f"http://localhost:{self.SSO_PORT}",
+                "description": "Local server"
+            },
+            {
+                "url": f"{self.SSO_PROTOCOL}://{self.SSO_HOST}:{self.SSO_PORT}",
+                "description": "Current server"
+            }
+        ]
 
     class Config:
         env_file = Path(__file__).resolve().parent.parent.parent / ".env"
