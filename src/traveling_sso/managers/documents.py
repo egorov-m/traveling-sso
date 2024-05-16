@@ -22,9 +22,9 @@ async def get_all_documents_by_user_id(*, session: AsyncSession, user_id) -> dic
 
     res = {"passport_rf": None, "foreign_passport_rf": None}
     if passport is not None:
-        res['passport_rf'] = passport.to_schema()
+        res["passport_rf"] = passport.to_schema()
     if passport_foreign is not None:
-        res['passport_foreign'] = passport_foreign.to_schema()
+        res["foreign_passport_rf"] = passport_foreign.to_schema()
     return res
 
 

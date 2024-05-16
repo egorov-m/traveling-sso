@@ -74,7 +74,7 @@ async def get_foreign_passport_rf(
 
 @user_router.get(
     "/documents/all",
-    response_model=dict[Literal['passport_rf', 'foreign_passport_rf'],
+    response_model=dict[Literal["passport_rf", "foreign_passport_rf"],
                         PassportRfSchema | ForeignPassportRfSchema | None] | None,
     status_code=status.HTTP_200_OK,
     summary="Get all documents",
@@ -89,17 +89,6 @@ async def get_all_documents(
         user_id=user.id
     )
     return documents
-"""
-examples
-{
-    "passport_rf": PassportRfSchema,
-    "foreign_passport_rf": ForeignPassportRfSchema
-}
-{
-    "passport_rf": PassportRfSchema,
-    "foreign_passport_rf": None  # passport has not been added
-}
-"""
 
 
 @user_router.post(
