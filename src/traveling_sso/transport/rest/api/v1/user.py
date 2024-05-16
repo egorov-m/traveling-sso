@@ -1,8 +1,13 @@
+from typing import Literal
+
 from fastapi import APIRouter, Depends, Body
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from traveling_sso.database.deps import get_db
+from traveling_sso.managers import get_passport_rf_by_user_id, get_foreign_passport_rf_by_user_id
+from traveling_sso.managers.documents import get_all_documents_by_user_id
 from traveling_sso.managers.token import get_token_sessions_by_user_id
 from traveling_sso.shared.schemas.protocol import (
     UserSchema,
@@ -33,7 +38,7 @@ async def info(user: UserSchema = Depends(AuthSsoUser())):
 
 @user_router.get(
     "/documents/passport_rf",
-    response_model=PassportRfSchema,
+    response_model=PassportRfSchema | None,
     status_code=status.HTTP_200_OK,
     summary="Get Passport RF",
     description="Get passport data of the passport of the Russian Federation."
@@ -42,13 +47,16 @@ async def get_passport_rf(
         session: AsyncSession = Depends(get_db),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    ...
+    passport = await get_passport_rf_by_user_id(
+            session=session,
+            user_id=user.id
+    )
+    return passport
 
 
 @user_router.get(
     "/documents/foreign_passport_rf",
-    response_model=ForeignPassportRfSchema,
+    response_model=ForeignPassportRfSchema | None,
     status_code=status.HTTP_200_OK,
     summary="Get Foreign Passport RF",
     description="Get passport data of the foreign passport of the Russian Federation."
@@ -57,13 +65,17 @@ async def get_foreign_passport_rf(
         session: AsyncSession = Depends(get_db),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    ...
+    foreign_passport = await get_foreign_passport_rf_by_user_id(
+        session=session,
+        user_id=user.id
+    )
+    return foreign_passport
 
 
 @user_router.get(
     "/documents/all",
-    response_model=dict,
+    response_model=dict[Literal['passport_rf', 'foreign_passport_rf'],
+                        PassportRfSchema | ForeignPassportRfSchema | None] | None,
     status_code=status.HTTP_200_OK,
     summary="Get all documents",
     description="Get data of all added documents."
@@ -72,22 +84,22 @@ async def get_all_documents(
         session: AsyncSession = Depends(get_db),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    """
-    examples
-    --------
-
-    {
-        "passport_rf": PassportRfSchema,
-        "foreign_passport_rf": ForeignPassportRfSchema
-    }
-
-    {
-        "passport_rf": PassportRfSchema,
-        "foreign_passport_rf": None  # passport has not been added
-    }
-    """
-    ...
+    documents = await get_all_documents_by_user_id(
+        session=session,
+        user_id=user.id
+    )
+    return documents
+"""
+examples
+{
+    "passport_rf": PassportRfSchema,
+    "foreign_passport_rf": ForeignPassportRfSchema
+}
+{
+    "passport_rf": PassportRfSchema,
+    "foreign_passport_rf": None  # passport has not been added
+}
+"""
 
 
 @user_router.post(

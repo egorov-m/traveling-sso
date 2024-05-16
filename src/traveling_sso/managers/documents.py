@@ -16,6 +16,18 @@ from traveling_sso.shared.schemas.exceptions import (
 from ..database.models import PassportRf, User, ForeignPassportRf
 
 
+async def get_all_documents_by_user_id(*, session: AsyncSession, user_id) -> dict:
+    passport = await _get_passport_rf_by_user_id(session, user_id)
+    passport_foreign = await _get_foreign_passport_rf_by_user_id(session, user_id)
+
+    res = {"passport_rf": None, "foreign_passport_rf": None}
+    if passport is not None:
+        res['passport_rf'] = passport.to_schema()
+    if passport_foreign is not None:
+        res['passport_foreign'] = passport_foreign.to_schema()
+    return res
+
+
 async def get_passport_rf_by_user_id(*, session: AsyncSession, user_id) -> PassportRfSchema | None:
     passport = await _get_passport_rf_by_user_id(session, user_id)
 
@@ -26,7 +38,7 @@ async def get_passport_rf_by_user_id(*, session: AsyncSession, user_id) -> Passp
 async def _get_passport_rf_by_user_id(session: AsyncSession, user_id):
     query = (select(PassportRf)
              .join(User, User.passport_rf_id == PassportRf.id)
-             .where(User.id == str(user_id))).returning(PassportRf)
+             .where(User.id == str(user_id)))
     passport = (await session.execute(query)).scalar()
 
     return passport
@@ -48,8 +60,8 @@ async def get_foreign_passport_rf_by_user_id(*, session: AsyncSession, user_id) 
 
 async def _get_foreign_passport_rf_by_user_id(session: AsyncSession, user_id):
     query = (select(ForeignPassportRf)
-             .join(User, User.foreign_passport_rf == ForeignPassportRf.id)
-             .where(User.id == str(user_id))).returning(ForeignPassportRf)
+             .join(User, User.foreign_passport_rf_id == ForeignPassportRf.id)
+             .where(User.id == str(user_id)))
     passport = (await session.execute(query)).scalar()
 
     return passport
