@@ -12,8 +12,8 @@ from traveling_sso.main import app
 
 spec = app.openapi()
 
-with open(join(dirname(__file__), "openapi.yaml"), "w") as f:
+with open(join(dirname(__file__), "..", "openapi.yaml"), "w") as f:
     ydump(spec, f)
 
-with open(join(dirname(__file__), "openapi.json"), "w") as f:
+with open(join(dirname(__file__), "..", "openapi.json"), "w") as f:
     jdump(spec, f)
