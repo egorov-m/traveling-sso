@@ -32,7 +32,9 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - "33380:80"
+      - "33380:33380"
+    environment:
+      SSO_PORT: 33380
     env_file:
       - env/db.env
       - env/sso.env
