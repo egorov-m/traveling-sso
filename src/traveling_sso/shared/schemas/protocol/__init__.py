@@ -22,7 +22,8 @@ from .user import (
     UserSchema,
     UserSessionSchema,
     CreateUserRequestSchema,
-    InternalCreateUserRequestSchema
+    InternalCreateUserRequestSchema,
+    UpdateUserInfoRequestSchema
 )
 
 __all__ = (

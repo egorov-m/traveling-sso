@@ -6,9 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from traveling_sso.database.deps import get_db
-from traveling_sso.managers import get_passport_rf_by_user_id, get_foreign_passport_rf_by_user_id
-from traveling_sso.managers.documents import get_all_documents_by_user_id
-from traveling_sso.managers.token import get_token_sessions_by_user_id
+from traveling_sso.managers import (
+    get_passport_rf_by_user_id,
+    get_foreign_passport_rf_by_user_id,
+    get_token_sessions_by_user_id,
+    get_all_documents_by_user_id,
+    update_user
+)
 from traveling_sso.shared.schemas.protocol import (
     UserSchema,
     PassportRfSchema,
@@ -18,7 +22,8 @@ from traveling_sso.shared.schemas.protocol import (
     CreateForeignPassportRfResponseSchema,
     UpdateForeignPassportRfResponseSchema,
     TokenSessionSchema,
-    UserSessionSchema
+    UserSessionSchema,
+    UpdateUserInfoRequestSchema
 )
 from traveling_sso.transport.rest.app_deps import AuthSsoUser
 
@@ -33,6 +38,27 @@ user_router = APIRouter()
     description="Get base information about the user."
 )
 async def info(user: UserSchema = Depends(AuthSsoUser())):
+    return user
+
+
+@user_router.put(
+    "/info",
+    response_model=UserSchema,
+    status_code=status.HTTP_200_OK,
+    summary="Update Userinfo",
+    description="Update base information about the user."
+)
+async def update_info(
+        user_data: UpdateUserInfoRequestSchema,
+        session: AsyncSession = Depends(get_db),
+        user: UserSchema = Depends(AuthSsoUser())
+):
+    user = await update_user(
+        session=session,
+        user_id=user.id,
+        user_data=user_data
+    )
+
     return user
 
 

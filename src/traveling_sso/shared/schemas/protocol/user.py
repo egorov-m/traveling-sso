@@ -36,6 +36,12 @@ class UserSchema(SsoBaseModel):
     is_foreign_passport: bool = False
 
 
+class UpdateUserInfoRequestSchema(SsoBaseModel):
+    email: EmailStr | None = None
+    username: constr(pattern=r"^[a-zA-Z0-9_]{5,32}$") | None = None
+    password: constr(min_length=8, max_length=255) | None = None
+
+
 class UserSessionSchema(UserSchema):
     session_id: UUID
     client_id: str
