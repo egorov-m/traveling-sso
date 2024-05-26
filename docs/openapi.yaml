@@ -539,6 +539,29 @@ components:
           title: Series
       title: UpdatePassportRfResponseSchema
       type: object
+    UpdateUserInfoRequestSchema:
+      properties:
+        email:
+          anyOf:
+          - format: email
+            type: string
+          - type: 'null'
+          title: Email
+        password:
+          anyOf:
+          - maxLength: 255
+            minLength: 8
+            type: string
+          - type: 'null'
+          title: Password
+        username:
+          anyOf:
+          - pattern: ^[a-zA-Z0-9_]{5,32}$
+            type: string
+          - type: 'null'
+          title: Username
+      title: UpdateUserInfoRequestSchema
+      type: object
     UserRoleType:
       enum:
       - user
@@ -978,6 +1001,33 @@ paths:
       summary: Get Userinfo
       tags:
       - User (me)
+    put:
+      description: Update base information about the user.
+      operationId: update_info_api_v1_user_me_info_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserInfoRequestSchema'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Update Userinfo
+      tags:
+      - User (me)
   /api/v1/user/me/sessions:
     get:
       operationId: get_sessions_api_v1_user_me_sessions_get
@@ -998,6 +1048,6 @@ paths:
       - User (me)
 servers:
 - description: Local server
-  url: http://localhost:80
+  url: http://localhost:33381
 - description: Current server
-  url: http://0.0.0.0:80
+  url: http://127.0.0.1:33381
