@@ -2,8 +2,7 @@ from re import split
 
 from sqlalchemy import Column, DateTime, event
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import declared_attr, sessionmaker
+from sqlalchemy.orm import declared_attr, sessionmaker, declarative_base
 
 from ..config import settings
 from .utils import utcnow

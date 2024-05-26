@@ -53,9 +53,11 @@ class User(Base, TimeStampMixin):
     ):
         if id:
             self.id = str(id)
+        else:
+            self.id = str(uuid7())
         self.email = str(email)
         self.role = str(role)
-        self.password_hash = self._get_password_hash(password)
+        self.password_hash = self.get_password_hash(password)
         if username:
             self.username = username
         if passport_rf_id:
@@ -64,10 +66,10 @@ class User(Base, TimeStampMixin):
             self.foreign_passport_rf_id = str(foreign_passport_rf_id)
 
     def check_password(self, password: str) -> bool:
-        return self.password_hash == self._get_password_hash(password)
+        return self.password_hash == self.get_password_hash(password)
 
     @classmethod
-    def _get_password_hash(cls, password: str) -> str:
+    def get_password_hash(cls, password: str) -> str:
         return sha512(
             password.encode("utf-8") + settings.AUTH_PASSWORD_SALT.encode("utf-8")
         ).hexdigest()

@@ -4,7 +4,7 @@ from typing import Optional, Literal
 from pathlib import Path
 from urllib.parse import quote_plus
 
-from pydantic import Field
+from pydantic import Field, ConfigDict
 from pydantic_settings import BaseSettings
 
 
@@ -148,10 +148,11 @@ class Settings(BaseSettings):
             }
         ]
 
-    class Config:
-        env_file = Path(__file__).resolve().parent.parent.parent / ".env"
-        env_file_encoding = "utf-8"
+    model_config = ConfigDict(
+        env_file=Path(__file__).resolve().parent.parent.parent / ".env",
+        env_file_encoding = "utf-8",
         case_sensitive = False
+    )
 
 
 @lru_cache

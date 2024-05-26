@@ -8,9 +8,10 @@ from traveling_sso.shared.schemas.exceptions import (
 )
 from traveling_sso.shared.schemas.protocol import (
     UserSchema,
-    InternalCreateUserResponseSchema
+    InternalCreateUserRequestSchema
 )
 from ..database.models import User
+from ..database.utils import is_uuid
 
 
 async def get_user_by_id(*, session: AsyncSession, user_id) -> User:
@@ -29,13 +30,18 @@ async def get_user_by_identifier(*, session: AsyncSession, identifier) -> UserSc
     return user.to_schema()
 
 
-async def create_or_update_user(*, session: AsyncSession, user_data: InternalCreateUserResponseSchema) -> User:
-    user = await _get_user_by_identifier(session=session, identifier=str(user_data.id))
+async def create_or_update_user(*, session: AsyncSession, user_data: InternalCreateUserRequestSchema) -> User:
+    user = None
+    if user_data.id is not None:
+        user = await _get_user_by_identifier(session=session, identifier=str(user_data.id))
     if user is None:
         user = User(**user_data.model_dump())
     else:
         update_data = user_data.model_dump()
         update_data.pop("id", None)
+        password = update_data.pop("password", None)
+        if password is not None:
+            update_data["password_hash"] = User.get_password_hash(password)
         _update_user_fields(user=user, fields=update_data)
 
     try:
@@ -49,13 +55,10 @@ async def create_or_update_user(*, session: AsyncSession, user_data: InternalCre
 
 async def _get_user_by_identifier(*, session: AsyncSession, identifier) -> User | None:
     identifier = str(identifier)
-    query = select(User).where(
-        or_(
-            User.id == str(identifier),
-            User.email == str(identifier),
-            User.username == str(identifier)
-        )
-    )
+    clauses = [User.email == str(identifier), User.username == str(identifier)]
+    if is_uuid(identifier):
+        clauses.append(User.id == str(identifier))
+    query = select(User).where(or_(*clauses))
     user = (await session.execute(query)).scalar()
 
     return user

@@ -10,7 +10,7 @@ from traveling_sso.shared.schemas.exceptions import (
     SsoException
 )
 from traveling_sso.shared.schemas.protocol import (
-    InternalCreateUserResponseSchema,
+    InternalCreateUserRequestSchema,
     UserRoleType,
     TokenResponseSchema,
     TokenType
@@ -80,7 +80,7 @@ class CustomAuthManager:
 
         user = await create_or_update_user(
             session=self.session,
-            user_data=InternalCreateUserResponseSchema(
+            user_data=InternalCreateUserRequestSchema(
                 role=UserRoleType.user,
                 email=self.email,
                 password=self.password

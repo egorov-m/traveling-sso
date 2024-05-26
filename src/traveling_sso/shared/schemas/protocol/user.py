@@ -1,10 +1,8 @@
 from datetime import datetime
 from enum import StrEnum
-from typing import Optional
 from uuid import UUID
 
 from pydantic import EmailStr, constr
-from uuid_extensions import uuid7
 
 from ..base import SsoBaseModel
 
@@ -14,23 +12,23 @@ class UserRoleType(StrEnum):
     admin = "admin"
 
 
-class CreateUserResponseSchema(SsoBaseModel):
+class CreateUserRequestSchema(SsoBaseModel):
     email: EmailStr
     password: constr(min_length=8, max_length=255)
-    username: Optional[str] = None
+    username: constr(pattern=r"^[a-zA-Z0-9_]{5,32}$") | None = None
 
 
-class InternalCreateUserResponseSchema(CreateUserResponseSchema):
-    id: UUID = uuid7()
+class InternalCreateUserRequestSchema(CreateUserRequestSchema):
+    id: UUID | None = None
     role: UserRoleType
-    passport_rf_id: Optional[UUID] = None
-    foreign_passport_rf_id: Optional[UUID] = None
+    passport_rf_id: UUID | None = None
+    foreign_passport_rf_id: UUID | None = None
 
 
 class UserSchema(SsoBaseModel):
     id: UUID
     email: EmailStr
-    username: Optional[str] = None
+    username: str | None = None
     role: UserRoleType
     created_at: datetime
     updated_at: datetime

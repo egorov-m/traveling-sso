@@ -21,8 +21,8 @@ from .user import (
     UserRoleType,
     UserSchema,
     UserSessionSchema,
-    CreateUserResponseSchema,
-    InternalCreateUserResponseSchema
+    CreateUserRequestSchema,
+    InternalCreateUserRequestSchema
 )
 
 __all__ = (
@@ -42,6 +42,6 @@ __all__ = (
     UserRoleType,
     UserSchema,
     UserSessionSchema,
-    CreateUserResponseSchema,
-    InternalCreateUserResponseSchema,
+    CreateUserRequestSchema,
+    InternalCreateUserRequestSchema,
 )

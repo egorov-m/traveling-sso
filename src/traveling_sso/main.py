@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from logging import getLogger
 from traceback import format_exc
 from uuid import uuid4
@@ -22,12 +23,20 @@ from traveling_sso.shared.schemas.protocol.error import get_error_response
 from traveling_sso.transport.rest import app_router
 
 
+@asynccontextmanager
+async def lifespan(*args, **kwargs):
+    if settings.INIT_ROOT_ADMIN_USER:
+        await db_init_root_user()
+    yield
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description=settings.PROJECT_DESCRIPTION,
     version=settings.PROJECT_VERSION,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    servers=settings.API_SERVERS
+    servers=settings.API_SERVERS,
+    lifespan=lifespan
 )
 
 
@@ -121,9 +130,3 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     return get_error_response(
         traceback=format_exc()
     )
-
-
-@app.on_event("startup")
-async def startup():
-    if settings.INIT_ROOT_ADMIN_USER:
-        await db_init_root_user()
