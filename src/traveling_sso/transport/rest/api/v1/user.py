@@ -7,7 +7,8 @@ from starlette import status
 
 from traveling_sso.database.deps import get_db
 from traveling_sso.managers import get_passport_rf_by_user_id, get_foreign_passport_rf_by_user_id
-from traveling_sso.managers.documents import get_all_documents_by_user_id
+from traveling_sso.managers.documents import get_all_documents_by_user_id, create_passport_rf_new, \
+    create_foreign_passport_rf_new
 from traveling_sso.managers.token import get_token_sessions_by_user_id
 from traveling_sso.shared.schemas.protocol import (
     UserSchema,
@@ -102,8 +103,13 @@ async def create_passport_rf(
         passport_rf: CreatePassportRfResponseSchema = Body(..., description="Passport data to be added."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    ...
+    user_id = str(user.id) if user else None
+    new_passport_rf = await create_passport_rf_new(
+        session=session,
+        passport_data=passport_rf,
+        user_id=user_id,
+    )
+    return new_passport_rf
 
 
 @user_router.put(
@@ -130,14 +136,19 @@ async def update_passport_rf(
 )
 async def create_foreign_passport_rf(
         session: AsyncSession = Depends(get_db),
-        passport_rf: CreateForeignPassportRfResponseSchema = Body(
+        foreign_passport_rf: CreateForeignPassportRfResponseSchema = Body(
             ...,
             description="Foreign Passport data to be added."
         ),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    ...
+    user_id = str(user.id) if user else None
+    new_foreign_passport_rf = await create_foreign_passport_rf_new(
+        session=session,
+        passport_data=foreign_passport_rf,
+        user_id=user_id,
+    )
+    return new_foreign_passport_rf
 
 
 @user_router.put(

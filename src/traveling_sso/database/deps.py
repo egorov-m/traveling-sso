@@ -83,5 +83,5 @@ async def db_init_root_user():
                     **settings.ROOT_ADMIN_USER_CLIENT,
                     user=user
                 )
-        await session.commit()
+        await session.flush()
         break

@@ -6,8 +6,9 @@ from .client import (
 from .documents import (
     get_passport_rf_by_user_id,
     get_foreign_passport_rf_by_user_id,
+    create_passport_rf_new,
     create_or_update_passport_rf,
-    create_or_update_foreign_passport_rf
+    create_or_update_foreign_passport_rf,
 )
 from .user import (
     get_user_by_identifier,
@@ -20,6 +21,7 @@ __all__ = (
     create_client,
     get_passport_rf_by_user_id,
     get_foreign_passport_rf_by_user_id,
+    create_passport_rf_new,
     create_or_update_passport_rf,
     create_or_update_foreign_passport_rf,
     get_user_by_identifier,

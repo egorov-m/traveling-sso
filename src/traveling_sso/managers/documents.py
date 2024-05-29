@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy import select
 from sqlalchemy.exc import DatabaseError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,13 +9,16 @@ from traveling_sso.shared.schemas.protocol import (
     ForeignPassportRfSchema,
     CreatePassportRfResponseSchema,
     CreateForeignPassportRfResponseSchema,
-    UpdatePassportRfResponseSchema
+    UpdatePassportRfResponseSchema,
 )
 from traveling_sso.shared.schemas.exceptions import (
     passport_rf_not_specified_exception,
-    foreign_passport_rf_not_specified_exception
+    foreign_passport_rf_not_specified_exception,
+    passport_rf_already_exists_exception
 )
+from .user import add_passport_rf, add_foreign_passport_rf
 from ..database.models import PassportRf, User, ForeignPassportRf
+from ..shared.schemas.exceptions.templates import foreign_passport_rf_already_exists_exception
 
 
 async def get_all_documents_by_user_id(*, session: AsyncSession, user_id) -> dict:
@@ -74,6 +79,28 @@ async def _get_foreign_passport_rf_by_id(session: AsyncSession, passport_id):
     return passport
 
 
+async def create_passport_rf_new(
+        *,
+        session: AsyncSession,
+        passport_data: CreatePassportRfResponseSchema | UpdatePassportRfResponseSchema,
+        user_id: str | None = None,
+) -> PassportRfSchema:
+
+    passport = await _get_passport_rf_by_user_id(session, user_id)
+    if passport is not None:
+        raise passport_rf_already_exists_exception
+    passport_id = str(uuid.uuid4())
+    passport = PassportRf(
+        **passport_data.model_dump(),
+        id=passport_id,
+        is_verified=True
+    )
+    session.add(passport)
+    await add_passport_rf(session=session, passport=passport, user_id=user_id)
+    return passport.to_schema()
+
+
+
 async def create_or_update_passport_rf(
         *,
         session: AsyncSession,
@@ -106,6 +133,24 @@ async def create_or_update_passport_rf(
         raise passport_rf_not_specified_exception from error
     return passport.to_schema()
 
+async def create_foreign_passport_rf_new(
+        *,
+        session: AsyncSession,
+        passport_data: CreateForeignPassportRfResponseSchema,
+        user_id: str | None = None
+) -> ForeignPassportRfSchema:
+    passport = await get_foreign_passport_rf_by_user_id(session=session, user_id=user_id)
+    if passport is not None:
+        raise foreign_passport_rf_already_exists_exception
+    passport_id = str(uuid.uuid4())
+    passport = ForeignPassportRf(
+        **passport_data.model_dump(),
+        id=passport_id,
+        is_verified=True
+    )
+    session.add(passport)
+    await add_foreign_passport_rf(session=session, passport=passport, user_id=user_id)
+    return passport.to_schema()
 
 async def create_or_update_foreign_passport_rf(
         *,
