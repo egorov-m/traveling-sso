@@ -2,15 +2,14 @@ from re import split
 
 from sqlalchemy import Column, DateTime, event
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import declared_attr, sessionmaker
+from sqlalchemy.orm import declared_attr, sessionmaker, declarative_base
 
 from ..config import settings
 from .utils import utcnow
 
 
 engine: AsyncEngine = create_async_engine(url=settings.get_db_url(),
-                                          pool_pre_ping=True,
+                                          pool_pre_ping=settings.DB_POOL_PRE_PING,
                                           pool_size=settings.DB_POOL_SIZE,
                                           max_overflow=settings.DB_MAX_OVERFLOW)
 

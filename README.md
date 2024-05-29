@@ -1,5 +1,15 @@
-# traveling-sso
+<h1 align="center">
+    <span>Traveling SSO</span>
+</h1>
+
+<div align="center">
+
 Design and development of distributed software systems: semester work - auth, userInfo microservice.
+
+[![Build][build-img]][build-url]
+[![Tests][tests-img]][tests-url]
+
+</div>
 
 
 ## Usage
@@ -57,6 +67,37 @@ Design and development of distributed software systems: semester work - auth, us
 > source ./.venv/Script/activate  # Windows
 > source ./.venv/bin/activate  # Linux
 > pip install -r ./requirements/default.txt
+> pip install -r ./requirements/tests.txt
+```
+
+### Testing
+
+- requires instance Postgres database;
+- setup environment;
+
+```shell
+export PYTHONUNBUFFERED=1 \
+export SSO_HOST=localhost \
+export SSO_PORT=33381 \
+export DEBUG=False \
+export INIT_ROOT_ADMIN_USER=False \
+export DB_HOST=localhost \
+export DB_PORT=<db_port> \
+export POSTGRES_DB=<db_name> \
+export POSTGRES_USER=<db_user> \
+export POSTGRES_PASSWORD=<db_password>
+```
+
+```shell
+pytest -v
+```
+
+#### Allure Report
+
+```shell
+pytest -v --alluredir docs/allure-results
+allure generate docs/allure-results -o docs/allure-report --clean --single-file
+allure serve docs/allure-results/
 ```
 
 ### Migration generation
@@ -67,3 +108,8 @@ Design and development of distributed software systems: semester work - auth, us
 > alembic -c src/traveling_sso/database/alembic.ini revision --autogenerate -m "<comment>"
 > docker compose restart sso-service
 ```
+
+[build-img]: https://github.com/egorov-m/traveling-sso/actions/workflows/docker-build.yaml/badge.svg?branch=develop
+[build-url]: https://github.com/egorov-m/traveling-sso/actions
+[tests-img]: https://github.com/egorov-m/traveling-sso/actions/workflows/tests.yaml/badge.svg?branch=develop
+[tests-url]: https://egorov-m.github.io/traveling-sso/allure-report

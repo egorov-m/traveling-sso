@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from enum import IntEnum
 from functools import wraps
+from uuid import UUID
 
 
 class CommitMode(IntEnum):
@@ -51,3 +52,11 @@ def unaware_to_utc(d: datetime | None) -> datetime:
     if d and d.tzinfo is None:
         return d.replace(tzinfo=timezone.utc)
     return d
+
+
+def is_uuid(input_string):
+    try:
+        uuid_obj = UUID(input_string)
+    except ValueError:
+        return False
+    return True

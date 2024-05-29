@@ -4,7 +4,7 @@ from typing import Optional, Literal
 from pathlib import Path
 from urllib.parse import quote_plus
 
-from pydantic import Field, IPvAnyAddress
+from pydantic import Field, ConfigDict
 from pydantic_settings import BaseSettings
 
 
@@ -126,6 +126,7 @@ class Settings(BaseSettings):
     DB_NAME: str = Field("project.traveling_sso", alias="POSTGRES_DB")
     DB_USER: str = Field("user.traveling_sso", alias="POSTGRES_USER")
     DB_PASSWORD: str = Field("postgres", alias="POSTGRES_PASSWORD")
+    DB_POOL_PRE_PING: bool = True
     DB_POOL_SIZE: int = 75
     DB_MAX_OVERFLOW: int = 20
 
@@ -147,10 +148,11 @@ class Settings(BaseSettings):
             }
         ]
 
-    class Config:
-        env_file = Path(__file__).resolve().parent.parent.parent / ".env"
-        env_file_encoding = "utf-8"
+    model_config = ConfigDict(
+        env_file=Path(__file__).resolve().parent.parent.parent / ".env",
+        env_file_encoding = "utf-8",
         case_sensitive = False
+    )
 
 
 @lru_cache

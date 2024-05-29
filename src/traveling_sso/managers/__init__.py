@@ -9,10 +9,17 @@ from .documents import (
     create_passport_rf_new,
     create_or_update_passport_rf,
     create_or_update_foreign_passport_rf,
+    get_all_documents_by_user_id,
 )
 from .user import (
+    get_user_by_id,
     get_user_by_identifier,
-    create_or_update_user
+    create_or_update_user,
+    update_user
+)
+from .token import (
+    get_token_sessions_by_user_id,
+    get_token_session_by_refresh_token
 )
 
 __all__ = (

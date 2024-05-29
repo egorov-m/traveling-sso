@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from traveling_sso.shared.schemas.protocol import (
-    InternalCreateUserResponseSchema,
-    CreatePassportRfResponseSchema, CreateForeignPassportRfResponseSchema
+    InternalCreateUserRequestSchema,
+    CreatePassportRfResponseSchema,
+    CreateForeignPassportRfResponseSchema
 )
 from .core import get_session, engine, Base
 from ..config import settings
@@ -66,7 +67,7 @@ async def db_init_root_user():
         user_dict = dict(settings.ROOT_ADMIN_USER)
         assert all(key in user_dict for key in ("id", "email", "username", "role", "password"))
 
-        user = await create_or_update_user(session=session, user_data=InternalCreateUserResponseSchema(
+        user = await create_or_update_user(session=session, user_data=InternalCreateUserRequestSchema(
             **settings.ROOT_ADMIN_USER,
             passport_rf_id=passport_rf_id,
             foreign_passport_rf_id=foreign_passport_rf_id
