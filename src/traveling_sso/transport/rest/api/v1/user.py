@@ -150,7 +150,7 @@ async def create_passport_rf(
 )
 async def update_passport_rf(
         session: AsyncSession = Depends(get_db),
-        passport_rf: CreatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
+        passport_rf: UpdatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
     return await create_or_update_passport_rf(session=session, passport_data=passport_rf, user_id=str(user.id))
@@ -187,14 +187,13 @@ async def create_foreign_passport_rf(
 )
 async def update_foreign_passport_rf(
         session: AsyncSession = Depends(get_db),
-        passport_rf: CreateForeignPassportRfResponseSchema = Body(
+        passport_rf: UpdateForeignPassportRfResponseSchema = Body(
             ...,
             description="Foreign Passport data to be updated."
         ),
         user: UserSchema = Depends(AuthSsoUser())
 ):
     return await create_or_update_foreign_passport_rf(session=session, passport_data=passport_rf, user_id=str(user.id))
-
 
 @user_router.get(
     "/sessions",

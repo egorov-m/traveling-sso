@@ -9,7 +9,7 @@ from traveling_sso.shared.schemas.protocol import (
     ForeignPassportRfSchema,
     CreatePassportRfResponseSchema,
     CreateForeignPassportRfResponseSchema,
-    UpdatePassportRfResponseSchema,
+    UpdatePassportRfResponseSchema, UpdateForeignPassportRfResponseSchema,
 )
 from traveling_sso.shared.schemas.exceptions import (
     passport_rf_not_specified_exception,
@@ -116,8 +116,9 @@ async def create_or_update_passport_rf(
         else:
             passport = await _get_passport_rf_by_user_id(session, user_id)
         if passport is not None:
-            _update_passport_fields(passport=passport, fields=passport_data.model_dump())
+            _update_passport_fields(passport=passport, fields=passport_data.model_dump(exclude_unset=True))
     if passport is None:
+        passport_id = str(uuid.uuid4())
         passport = PassportRf(
             **passport_data.model_dump(),
             id=passport_id,
@@ -155,7 +156,7 @@ async def create_foreign_passport_rf_new(
 async def create_or_update_foreign_passport_rf(
         *,
         session: AsyncSession,
-        passport_data: CreateForeignPassportRfResponseSchema,
+        passport_data: CreateForeignPassportRfResponseSchema | UpdateForeignPassportRfResponseSchema,
         passport_id: str | None = None,
         user_id: str | None = None,
         is_verified: bool = False
@@ -163,14 +164,15 @@ async def create_or_update_foreign_passport_rf(
     assert passport_id is None or user_id is None, "Use one of the identifiers for the search."
 
     passport = None
-    if (passport_id is not None or user_id is not None) or isinstance(passport_data, UpdatePassportRfResponseSchema):
+    if passport_id is not None or user_id is not None:
         if passport_id is not None:
             passport = await _get_foreign_passport_rf_by_id(session, passport_id)
         else:
             passport = await _get_foreign_passport_rf_by_user_id(session, user_id)
         if passport is not None:
-            _update_passport_fields(passport=passport, fields=passport_data.model_dump())
+            _update_passport_fields(passport=passport, fields=passport_data.model_dump(exclude_unset=True))
     if passport is None:
+        passport_id = str(uuid.uuid4())
         passport = ForeignPassportRf(
             **passport_data.model_dump(),
             id=passport_id,
