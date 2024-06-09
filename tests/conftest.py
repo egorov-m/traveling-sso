@@ -6,7 +6,7 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from factories import UserFactory
+from .factories import UserFactory, ClientFactory, TokenSessionFactory
 from traveling_sso.database.core import get_session
 from traveling_sso.main import app
 
@@ -31,6 +31,18 @@ async def session():
 @allure.title("Prepare user in database for the test.")
 async def user(session):
     return await UserFactory(session)
+
+
+@pytest.fixture()
+@allure.title("Prepare sso client in database for the test.")
+async def client(session):
+    return await ClientFactory(session)
+
+
+@pytest.fixture()
+@allure.title("Prepare refresh token session in database for the test.")
+async def token_session(session, client):
+    return await TokenSessionFactory(session, client_id=client.client_id)
 
 
 @pytest.fixture(scope="session")
