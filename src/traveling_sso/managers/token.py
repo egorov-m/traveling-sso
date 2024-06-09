@@ -142,7 +142,12 @@ async def get_token_session_by_refresh_token(*, session: AsyncSession, refresh_t
     return token
 
 
-async def update_refresh_token(*, session: AsyncSession, token: TokenSession, client: Client, user: User) -> TokenResponseSchema:
+async def update_refresh_token(*,
+                               session: AsyncSession,
+                               token: TokenSession,
+                               client: Client,
+                               user: User
+                               ) -> TokenResponseSchema:
     token.refresh_token = str(uuid4())
     session.add(token)
     await session.flush()
@@ -200,7 +205,7 @@ async def revoke_token_session(
         raise auth_refresh_token_not_found_exception
     token.refresh_token_revoked_at = int(utcnow().timestamp())
     session.add(token)
-    await session.commit()
+    await session.flush()
 
     return True
 
