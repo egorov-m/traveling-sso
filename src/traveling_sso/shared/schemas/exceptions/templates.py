@@ -34,6 +34,18 @@ user_conflict_exception = SsoException(
     http_status_code=status.HTTP_409_CONFLICT
 )
 
+passport_rf_already_exists_exception = SsoException(
+    message="Passport RF already exists.",
+    error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,
+    http_status_code=status.HTTP_400_BAD_REQUEST
+)
+
+foreign_passport_rf_already_exists_exception = SsoException(
+    message="Foreign passport RF already exists.",
+    error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,
+    http_status_code=status.HTTP_400_BAD_REQUEST
+)
+
 passport_rf_not_specified_exception = SsoException(
     message="Passport RF not specified.",
     error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,

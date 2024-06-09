@@ -2,21 +2,26 @@ from datetime import date, datetime
 from typing import Literal
 
 from ..base import SsoBaseModel
+from pydantic import constr
 
 
 class CreatePassportRfResponseSchema(SsoBaseModel):
-    series: str
-    number: str
+    series: constr(min_length=4, max_length=4)
+    number: constr(min_length=6, max_length=6)
+
     first_name: str
     last_name: str
     second_name: str | None = None
+
     birth_date: date
-    birth_place: str
+    birth_place: constr(max_length=255)
+
     gender: Literal["М", "Ж"]
-    issued_by: str
-    division_code: str
+
+    issued_by: constr(max_length=255)
+    division_code: constr(max_length=10)
     issue_date: date
-    registration_address: str
+    registration_address: constr(max_length=255)
 
 
 class UpdatePassportRfResponseSchema(SsoBaseModel):
@@ -41,19 +46,24 @@ class PassportRfSchema(CreatePassportRfResponseSchema):
 
 
 class CreateForeignPassportRfResponseSchema(SsoBaseModel):
-    number: str
+    number: constr(max_length=20)
+
     first_name: str
     first_name_latin: str
     last_name: str
     last_name_latin: str
     second_name: str | None = None
-    citizenship: str
-    citizenship_latin: str
+
+    citizenship: constr(max_length=50)
+    citizenship_latin: constr(max_length=50)
+
     birth_date: date
-    birth_place: str
-    birth_place_latin: str
+    birth_place: constr(max_length=255)
+    birth_place_latin: constr(max_length=255)
+
     gender: Literal["М", "Ж"]
-    issued_by: str
+
+    issued_by: constr(max_length=255)
     issue_date: date
     expiry_date: date
 

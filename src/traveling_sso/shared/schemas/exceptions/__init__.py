@@ -6,7 +6,8 @@ from .templates import (
     user_not_specified_exception,
     user_conflict_exception,
     passport_rf_not_specified_exception,
-    foreign_passport_rf_not_specified_exception
+    foreign_passport_rf_not_specified_exception,
+    passport_rf_already_exists_exception
 )
 
 __all__ = (
@@ -16,5 +17,6 @@ __all__ = (
     user_not_specified_exception,
     user_conflict_exception,
     passport_rf_not_specified_exception,
-    foreign_passport_rf_not_specified_exception
+    foreign_passport_rf_not_specified_exception,
+    passport_rf_already_exists_exception
 )

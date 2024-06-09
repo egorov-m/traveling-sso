@@ -12,7 +12,8 @@ from traveling_sso.shared.schemas.protocol import (
     InternalCreateUserRequestSchema,
     UpdateUserInfoRequestSchema
 )
-from ..database.models import User
+
+from ..database.models import User, PassportRf
 from ..database.utils import is_uuid
 
 
@@ -31,6 +32,26 @@ async def get_user_by_identifier(*, session: AsyncSession, identifier) -> UserSc
 
     return user.to_schema()
 
+
+async def add_passport_rf(*, session: AsyncSession, passport: PassportRf, user_id: str) -> User:
+    user = await _get_user_by_identifier(session=session, identifier=str(user_id))
+
+    user.passport_rf_id = passport.id
+    try:
+        session.add(user)
+        await session.flush()
+    except DatabaseError as error:
+        raise user_not_specified_exception from error
+
+async def add_foreign_passport_rf(*, session: AsyncSession, passport: PassportRf, user_id: str) -> User:
+    user = await _get_user_by_identifier(session=session, identifier=str(user_id))
+
+    user.foreign_passport_rf_id = passport.id
+    try:
+        session.add(user)
+        await session.flush()
+    except DatabaseError as error:
+        raise user_not_specified_exception from error
 
 async def create_or_update_user(*, session: AsyncSession, user_data: InternalCreateUserRequestSchema) -> User:
     user = None
