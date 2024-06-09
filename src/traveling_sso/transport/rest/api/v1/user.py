@@ -1,6 +1,6 @@
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Body, HTTPException
+from fastapi import APIRouter, Depends, Body
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
@@ -8,6 +8,7 @@ from starlette import status
 from traveling_sso.database.deps import get_db
 
 from traveling_sso.managers.documents import create_passport_rf_new, create_foreign_passport_rf_new
+from traveling_sso.managers.documents import create_or_update_passport_rf, create_or_update_foreign_passport_rf
 
 from traveling_sso.managers import (
     get_passport_rf_by_user_id,
@@ -78,8 +79,8 @@ async def get_passport_rf(
         user: UserSchema = Depends(AuthSsoUser())
 ):
     passport = await get_passport_rf_by_user_id(
-            session=session,
-            user_id=user.id
+        session=session,
+        user_id=user.id
     )
     return passport
 
@@ -105,7 +106,7 @@ async def get_foreign_passport_rf(
 @user_router.get(
     "/documents/all",
     response_model=dict[Literal["passport_rf", "foreign_passport_rf"],
-                        PassportRfSchema | ForeignPassportRfSchema | None] | None,
+    PassportRfSchema | ForeignPassportRfSchema | None] | None,
     status_code=status.HTTP_200_OK,
     summary="Get all documents",
     description="Get data of all added documents."
@@ -149,21 +150,10 @@ async def create_passport_rf(
 )
 async def update_passport_rf(
         session: AsyncSession = Depends(get_db),
-        passport_rf: UpdatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
+        passport_rf: CreatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    existing_passport_rf = await get_passport_rf_by_user_id(session=session, user_id=user.id)
-
-    if not existing_passport_rf:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Passport RF not found")
-
-    for field, value in passport_rf.dict(exclude_unset=True).items():
-        setattr(existing_passport_rf, field, value)
-
-    await session.commit()
-    await session.refresh(existing_passport_rf)
-
-    return existing_passport_rf
+    return await create_or_update_passport_rf(session=session, passport_data=passport_rf, user_id=str(user.id))
 
 
 @user_router.post(
@@ -197,24 +187,14 @@ async def create_foreign_passport_rf(
 )
 async def update_foreign_passport_rf(
         session: AsyncSession = Depends(get_db),
-        passport_rf: UpdateForeignPassportRfResponseSchema = Body(
+        passport_rf: CreateForeignPassportRfResponseSchema = Body(
             ...,
             description="Foreign Passport data to be updated."
         ),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    existing_foreign_passport_rf = await get_foreign_passport_rf_by_user_id(session=session, user_id=user.id)
+    return await create_or_update_foreign_passport_rf(session=session, passport_data=passport_rf, user_id=str(user.id))
 
-    if not existing_foreign_passport_rf:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Foreign Passport RF not found")
-
-    for field, value in passport_rf.dict(exclude_unset=True).items():
-        setattr(existing_foreign_passport_rf, field, value)
-
-    await session.commit()
-    await session.refresh(existing_foreign_passport_rf)
-
-    return existing_foreign_passport_rf
 
 @user_router.get(
     "/sessions",
