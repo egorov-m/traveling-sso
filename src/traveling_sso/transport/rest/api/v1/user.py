@@ -1,6 +1,6 @@
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, HTTPException
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
@@ -152,9 +152,18 @@ async def update_passport_rf(
         passport_rf: UpdatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    # update fields that are not None
-    ...
+    existing_passport_rf = await get_passport_rf_by_user_id(session=session, user_id=user.id)
+
+    if not existing_passport_rf:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Passport RF not found")
+
+    for field, value in passport_rf.dict(exclude_unset=True).items():
+        setattr(existing_passport_rf, field, value)
+
+    await session.commit()
+    await session.refresh(existing_passport_rf)
+
+    return existing_passport_rf
 
 
 @user_router.post(
@@ -194,10 +203,18 @@ async def update_foreign_passport_rf(
         ),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    # update fields that are not None
-    ...
+    existing_foreign_passport_rf = await get_foreign_passport_rf_by_user_id(session=session, user_id=user.id)
 
+    if not existing_foreign_passport_rf:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Foreign Passport RF not found")
+
+    for field, value in passport_rf.dict(exclude_unset=True).items():
+        setattr(existing_foreign_passport_rf, field, value)
+
+    await session.commit()
+    await session.refresh(existing_foreign_passport_rf)
+
+    return existing_foreign_passport_rf
 
 @user_router.get(
     "/sessions",
