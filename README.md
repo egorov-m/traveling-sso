@@ -14,6 +14,18 @@ Design and development of distributed software systems: semester work - auth, us
 
 ## Usage
 
+### Deployed Staging Instance
+
+`https://egorov-m-traveling-sso.hf.space/api/v1/docs`
+
+### Configuration
+
+**IS_REFRESH_TOKEN_VIA_COOKIE = `False`**
+
+In an expanded instance, the refresh token is passed in the response body. Due to different domains, cookies will not be accessible.
+
+*other default settings.*
+
 ### Local launch in docker
 
 ```shell
@@ -48,6 +60,40 @@ Design and development of distributed software systems: semester work - auth, us
 
 **client_public_secret - \n line breaks* 
 
+### How to register a user
+
+1. Use the endpoint `POST /api/v1/auth/signup`;
+2. Query parameter: client_id = `Rh4ZomeoWHFJus8KbspWqJTtXHcMGkLHAZ30qgCD3RK3rTHJ` - client initialized by default, assigned to admin user;
+3. In request body: email = `<your_email>` - format is important, password = `<your_password>` - [8, 255] characters;
+
+### How to signin a user
+
+1. Use the endpoint `POST /api/v1/auth/signin`;
+2. Query parameter: client_id = `Rh4ZomeoWHFJus8KbspWqJTtXHcMGkLHAZ30qgCD3RK3rTHJ` - client initialized by default, assigned to admin user;
+3. In request body: login = `<your_email_or_username>`, password = `<your_password>`;
+4. From the response body get an access token for authorized access. Use the following format in request headers: `Authorization: Bearer <your_access_token>`;
+5. In addition to the access token, a refresh token (in the cookie or response body - depending on the configuration).
+6. A session is created with each signin - default limit is 5. If the limit is exceeded, all old sessions will be revoked.
+
+*ps. in default deployment, admin user data (login -`admin@example.com`, password - `123456789`) can be used for tests;*
+
+### How to refresh a session (get a new access token)
+
+1. Use the endpoint `POST /api/v1/auth/session/refresh`;
+2. Pass in a cookie (sso_refresh_token) or as a header (x-sso-refresh-token) refresh token;
+3. The response comes with a new access token and an updated refresh token.
+4. The old access token is valid, until it expires. Old refresh token is not valid - new value is issued.
+
+### How to logout a user
+
+1. Use the endpoint `POST /api/v1/auth/logout`;
+2. The current session will be revoked (determined by the passed access token). But, the access token will be valid until it expires - it should be removed on the frontend.
+
+### How to revoke a user session
+
+1. Use the endpoint `POST /api/v1/auth/session/revoke`;
+2. Pass the session_id in the query parameter;
+3. The refresh token for the specified session will be revoked. But, the access token will be valid until it expires - it should be removed on the frontend.
 
 ## Developing
 
@@ -55,7 +101,6 @@ Design and development of distributed software systems: semester work - auth, us
 
 ```shell
 > docker compose up -d
-> docker compose restart sso-service
 ```
 
 ### Installing dependencies
@@ -64,7 +109,7 @@ Design and development of distributed software systems: semester work - auth, us
 
 ```shell
 > python -m venv .venv
-> source ./.venv/Script/activate  # Windows
+> source ./.venv/Scripts/activate  # Windows
 > source ./.venv/bin/activate  # Linux
 > pip install -r ./requirements/default.txt
 > pip install -r ./requirements/tests.txt
@@ -76,6 +121,7 @@ Design and development of distributed software systems: semester work - auth, us
 - setup environment;
 
 ```shell
+export PYTHONPATH=./src \
 export PYTHONUNBUFFERED=1 \
 export SSO_HOST=localhost \
 export SSO_PORT=33381 \

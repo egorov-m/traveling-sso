@@ -15,9 +15,14 @@ from traveling_sso.shared.schemas.protocol import (
     TokenResponseSchema,
     TokenType
 )
-from . import create_or_update_user, get_client_by_client_id
-from .token import create_token_session, get_token_session_by_refresh_token, update_refresh_token
-from .user import get_user_by_id
+from . import (
+    get_user_by_id,
+    create_or_update_user,
+    get_client_by_client_id,
+    create_token_session,
+    get_token_session_by_refresh_token,
+    update_refresh_token
+)
 from ..database.models import User
 
 
