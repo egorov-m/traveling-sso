@@ -24,6 +24,12 @@ Design and development of distributed software systems: semester work - auth, us
 
 In an expanded instance, the refresh token is passed in the response body. Due to different domains, cookies will not be accessible.
 
+**DEBUG = `True`**
+
+Debug mode is enabled:
+- more detailed information about the error in the response (message and traceback);
+- without debugging in case of error: status code is always 400, only error code in the response, see [below](./src/traveling_sso/shared/schemas/exceptions/error.py);
+
 *other default settings.*
 
 ### Local launch in docker
@@ -121,29 +127,29 @@ In an expanded instance, the refresh token is passed in the response body. Due t
 - setup environment;
 
 ```shell
-export PYTHONPATH=./src \
-export PYTHONUNBUFFERED=1 \
-export SSO_HOST=localhost \
-export SSO_PORT=33381 \
-export DEBUG=False \
-export INIT_ROOT_ADMIN_USER=False \
-export DB_HOST=localhost \
-export DB_PORT=<db_port> \
-export POSTGRES_DB=<db_name> \
-export POSTGRES_USER=<db_user> \
-export POSTGRES_PASSWORD=<db_password>
+> export PYTHONPATH=./src \
+> export PYTHONUNBUFFERED=1 \
+> export SSO_HOST=localhost \
+> export SSO_PORT=33381 \
+> export DEBUG=False \
+> export INIT_ROOT_ADMIN_USER=False \
+> export DB_HOST=localhost \
+> export DB_PORT=<db_port> \
+> export POSTGRES_DB=<db_name> \
+> export POSTGRES_USER=<db_user> \
+> export POSTGRES_PASSWORD=<db_password>
 ```
 
 ```shell
-pytest -v
+> pytest -v
 ```
 
 #### Allure Report
 
 ```shell
-pytest -v --alluredir docs/allure-results
-allure generate docs/allure-results -o docs/allure-report --clean --single-file
-allure serve docs/allure-results/
+> pytest -v --alluredir docs/allure-results
+> allure generate docs/allure-results -o docs/allure-report --clean --single-file
+> allure serve docs/allure-results/
 ```
 
 ### Migration generation
