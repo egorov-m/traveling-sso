@@ -4,6 +4,7 @@ from typing import Literal
 from ..base import SsoBaseModel
 from pydantic import constr
 
+
 class CreatePassportRfResponseSchema(SsoBaseModel):
     series: constr(min_length=4, max_length=4)
     number: constr(min_length=6, max_length=6)

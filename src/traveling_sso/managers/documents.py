@@ -9,7 +9,7 @@ from traveling_sso.shared.schemas.protocol import (
     ForeignPassportRfSchema,
     CreatePassportRfResponseSchema,
     CreateForeignPassportRfResponseSchema,
-    UpdatePassportRfResponseSchema,
+    UpdatePassportRfResponseSchema, UpdateForeignPassportRfResponseSchema,
 )
 from traveling_sso.shared.schemas.exceptions import (
     passport_rf_not_specified_exception,
@@ -85,7 +85,6 @@ async def create_passport_rf_new(
         passport_data: CreatePassportRfResponseSchema | UpdatePassportRfResponseSchema,
         user_id: str | None = None,
 ) -> PassportRfSchema:
-
     passport = await _get_passport_rf_by_user_id(session, user_id)
     if passport is not None:
         raise passport_rf_already_exists_exception
@@ -98,7 +97,6 @@ async def create_passport_rf_new(
     session.add(passport)
     await add_passport_rf(session=session, passport=passport, user_id=user_id)
     return passport.to_schema()
-
 
 
 async def create_or_update_passport_rf(
@@ -133,6 +131,7 @@ async def create_or_update_passport_rf(
         raise passport_rf_not_specified_exception from error
     return passport.to_schema()
 
+
 async def create_foreign_passport_rf_new(
         *,
         session: AsyncSession,
@@ -151,6 +150,7 @@ async def create_foreign_passport_rf_new(
     session.add(passport)
     await add_foreign_passport_rf(session=session, passport=passport, user_id=user_id)
     return passport.to_schema()
+
 
 async def create_or_update_foreign_passport_rf(
         *,
@@ -189,3 +189,43 @@ def _update_passport_fields(*, passport, fields: dict):
     for field, value in fields.items():
         if value is not None:
             setattr(passport, field, value)
+
+
+async def update_existing_passport_rf(
+        *,
+        session: AsyncSession,
+        user_id: str,
+        passport_data: UpdatePassportRfResponseSchema
+) -> PassportRfSchema:
+    passport = await _get_passport_rf_by_user_id(session, user_id)
+    if not passport:
+        raise passport_rf_not_specified_exception
+
+    _update_passport_fields(passport=passport, fields=passport_data.model_dump())
+
+    try:
+        session.add(passport)
+        await session.flush()
+    except DatabaseError as error:
+        raise passport_rf_not_specified_exception from error
+    return passport.to_schema()
+
+
+async def update_existing_foreign_passport_rf(
+        *,
+        session: AsyncSession,
+        user_id: str,
+        passport_data: UpdateForeignPassportRfResponseSchema
+) -> ForeignPassportRfSchema:
+    passport = await _get_foreign_passport_rf_by_user_id(session, user_id)
+    if not passport:
+        raise foreign_passport_rf_not_specified_exception
+
+    _update_passport_fields(passport=passport, fields=passport_data.model_dump())
+
+    try:
+        session.add(passport)
+        await session.flush()
+    except DatabaseError as error:
+        raise foreign_passport_rf_not_specified_exception from error
+    return passport.to_schema()

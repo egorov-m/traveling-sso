@@ -7,7 +7,9 @@ from starlette import status
 
 from traveling_sso.database.deps import get_db
 
-from traveling_sso.managers.documents import create_passport_rf_new, create_foreign_passport_rf_new
+from traveling_sso.managers.documents import create_passport_rf_new, create_foreign_passport_rf_new, \
+    update_existing_passport_rf, update_existing_foreign_passport_rf
+from traveling_sso.managers.documents import create_or_update_passport_rf, create_or_update_foreign_passport_rf
 
 from traveling_sso.managers import (
     get_passport_rf_by_user_id,
@@ -78,8 +80,8 @@ async def get_passport_rf(
         user: UserSchema = Depends(AuthSsoUser())
 ):
     passport = await get_passport_rf_by_user_id(
-            session=session,
-            user_id=user.id
+        session=session,
+        user_id=user.id
     )
     return passport
 
@@ -105,7 +107,7 @@ async def get_foreign_passport_rf(
 @user_router.get(
     "/documents/all",
     response_model=dict[Literal["passport_rf", "foreign_passport_rf"],
-                        PassportRfSchema | ForeignPassportRfSchema | None] | None,
+    PassportRfSchema | ForeignPassportRfSchema | None] | None,
     status_code=status.HTTP_200_OK,
     summary="Get all documents",
     description="Get data of all added documents."
@@ -152,9 +154,7 @@ async def update_passport_rf(
         passport_rf: UpdatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    # update fields that are not None
-    ...
+    return await update_existing_passport_rf(session=session, user_id=user.id, passport_data=passport_rf)
 
 
 @user_router.post(
@@ -188,15 +188,11 @@ async def create_foreign_passport_rf(
 )
 async def update_foreign_passport_rf(
         session: AsyncSession = Depends(get_db),
-        passport_rf: UpdateForeignPassportRfResponseSchema = Body(
-            ...,
-            description="Foreign Passport data to be updated."
-        ),
+        passport_rf: UpdateForeignPassportRfResponseSchema = Body(...,
+                                                                  description="Foreign Passport data to be updated."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    # update fields that are not None
-    ...
+    return await update_existing_foreign_passport_rf(session=session, user_id=user.id, passport_data=passport_rf)
 
 
 @user_router.get(
