@@ -10,6 +10,8 @@ from .documents import (
     create_or_update_passport_rf,
     create_or_update_foreign_passport_rf,
     get_all_documents_by_user_id,
+    update_passport_rf,
+    update_foreign_passport_rf
 )
 from .user import (
     get_user_by_id,

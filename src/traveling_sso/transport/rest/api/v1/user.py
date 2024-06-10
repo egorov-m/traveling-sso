@@ -14,7 +14,9 @@ from traveling_sso.managers import (
     get_foreign_passport_rf_by_user_id,
     get_token_sessions_by_user_id,
     get_all_documents_by_user_id,
-    update_user
+    update_user,
+    update_passport_rf as _update_passport_rf,
+    update_foreign_passport_rf as _update_foreign_passport_rf
 )
 
 from traveling_sso.shared.schemas.protocol import (
@@ -152,9 +154,13 @@ async def update_passport_rf(
         passport_rf: UpdatePassportRfResponseSchema = Body(..., description="Passport data to be updated."),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    # update fields that are not None
-    ...
+    resp_schema = await _update_passport_rf(
+        session=session,
+        user_id=user.id,
+        passport_data=passport_rf
+    )
+
+    return resp_schema
 
 
 @user_router.post(
@@ -194,9 +200,13 @@ async def update_foreign_passport_rf(
         ),
         user: UserSchema = Depends(AuthSsoUser())
 ):
-    # TODO
-    # update fields that are not None
-    ...
+    resp_schema = await _update_foreign_passport_rf(
+        session=session,
+        user_id=user.id,
+        passport_data=passport_rf
+    )
+
+    return resp_schema
 
 
 @user_router.get(

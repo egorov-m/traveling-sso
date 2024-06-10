@@ -43,6 +43,7 @@ async def add_passport_rf(*, session: AsyncSession, passport: PassportRf, user_i
     except DatabaseError as error:
         raise user_not_specified_exception from error
 
+
 async def add_foreign_passport_rf(*, session: AsyncSession, passport: PassportRf, user_id: str) -> User:
     user = await _get_user_by_identifier(session=session, identifier=str(user_id))
 
@@ -52,6 +53,7 @@ async def add_foreign_passport_rf(*, session: AsyncSession, passport: PassportRf
         await session.flush()
     except DatabaseError as error:
         raise user_not_specified_exception from error
+
 
 async def create_or_update_user(*, session: AsyncSession, user_data: InternalCreateUserRequestSchema) -> User:
     user = None

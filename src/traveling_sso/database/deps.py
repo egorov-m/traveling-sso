@@ -1,5 +1,3 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from traveling_sso.shared.schemas.protocol import (
     InternalCreateUserRequestSchema,
     CreatePassportRfResponseSchema,
@@ -13,9 +11,9 @@ from ..managers.user import create_or_update_user
 
 
 async def get_db():
-    session: AsyncSession = get_session()
-    async with session.begin() as transaction:
-        yield session
+    async with get_session() as session:
+        async with session.begin() as transaction:
+            yield transaction.session
 
 
 async def db_metadata_create_all():
@@ -84,5 +82,4 @@ async def db_init_root_user():
                     **settings.ROOT_ADMIN_USER_CLIENT,
                     user=user
                 )
-        await session.commit()
-        break
+        await session.flush()

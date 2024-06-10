@@ -1,4 +1,4 @@
-import uuid
+from uuid import uuid4
 
 from sqlalchemy import select
 from sqlalchemy.exc import DatabaseError
@@ -9,7 +9,8 @@ from traveling_sso.shared.schemas.protocol import (
     ForeignPassportRfSchema,
     CreatePassportRfResponseSchema,
     CreateForeignPassportRfResponseSchema,
-    UpdatePassportRfResponseSchema, UpdateForeignPassportRfResponseSchema,
+    UpdatePassportRfResponseSchema,
+    UpdateForeignPassportRfResponseSchema
 )
 from traveling_sso.shared.schemas.exceptions import (
     passport_rf_not_specified_exception,
@@ -88,7 +89,7 @@ async def create_passport_rf_new(
     passport = await _get_passport_rf_by_user_id(session, user_id)
     if passport is not None:
         raise passport_rf_already_exists_exception
-    passport_id = str(uuid.uuid4())
+    passport_id = str(uuid4())
     passport = PassportRf(
         **passport_data.model_dump(),
         id=passport_id,
@@ -118,7 +119,7 @@ async def create_or_update_passport_rf(
         if passport is not None:
             _update_passport_fields(passport=passport, fields=passport_data.model_dump(exclude_unset=True))
     if passport is None:
-        passport_id = str(uuid.uuid4())
+        passport_id = passport_id or str(uuid4())
         passport = PassportRf(
             **passport_data.model_dump(),
             id=passport_id,
@@ -142,7 +143,7 @@ async def create_foreign_passport_rf_new(
     passport = await get_foreign_passport_rf_by_user_id(session=session, user_id=user_id)
     if passport is not None:
         raise foreign_passport_rf_already_exists_exception
-    passport_id = str(uuid.uuid4())
+    passport_id = str(uuid4())
     passport = ForeignPassportRf(
         **passport_data.model_dump(),
         id=passport_id,
@@ -170,9 +171,9 @@ async def create_or_update_foreign_passport_rf(
         else:
             passport = await _get_foreign_passport_rf_by_user_id(session, user_id)
         if passport is not None:
-            _update_passport_fields(passport=passport, fields=passport_data.model_dump(exclude_unset=True))
+            _update_passport_fields(passport=passport, fields=passport_data.model_dump())
     if passport is None:
-        passport_id = str(uuid.uuid4())
+        passport_id = passport_id or str(uuid4())
         passport = ForeignPassportRf(
             **passport_data.model_dump(),
             id=passport_id,
@@ -193,7 +194,7 @@ def _update_passport_fields(*, passport, fields: dict):
             setattr(passport, field, value)
 
 
-async def update_existing_passport_rf(
+async def update_passport_rf(
         *,
         session: AsyncSession,
         user_id: str,
@@ -213,7 +214,7 @@ async def update_existing_passport_rf(
     return passport.to_schema()
 
 
-async def update_existing_foreign_passport_rf(
+async def update_foreign_passport_rf(
         *,
         session: AsyncSession,
         user_id: str,
