@@ -1,8 +1,25 @@
 from datetime import date, datetime
+from enum import StrEnum
 from typing import Literal
 
 from ..base import SsoBaseModel
 from pydantic import constr
+
+
+class DocumentType(StrEnum):
+    passport_rf = "passport_rf"
+    foreign_passport_rf = "foreign_passport_rf"
+
+
+class GetDocumentTypeSlug(StrEnum):
+    passport_rf = "passport_rf"
+    foreign_passport_rf = "foreign_passport_rf"
+    all = "all"
+
+
+class DocumentTypeSlug(StrEnum):
+    passport_rf = "passport_rf"
+    foreign_passport_rf = "foreign_passport_rf"
 
 
 class CreatePassportRfResponseSchema(SsoBaseModel):
