@@ -20,6 +20,7 @@ from .error import (
     SsoErrorSchema,
     SsoErrorsSchema
 )
+from .server import AboutSchema, HealthSchema
 from .user import (
     UserRoleType,
     UserSchema,
@@ -43,6 +44,8 @@ __all__ = (
     UpdateForeignPassportRfResponseSchema,
     SsoErrorSchema,
     SsoErrorsSchema,
+    AboutSchema,
+    HealthSchema,
     UserRoleType,
     UserSchema,
     UserSessionSchema,
