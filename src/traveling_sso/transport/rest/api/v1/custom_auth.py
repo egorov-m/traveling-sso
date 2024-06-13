@@ -4,7 +4,6 @@ from uuid import UUID
 from fastapi import APIRouter, Query, Depends, Cookie, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
-from starlette.responses import JSONResponse
 
 from traveling_sso.config import settings
 from traveling_sso.database.deps import get_db

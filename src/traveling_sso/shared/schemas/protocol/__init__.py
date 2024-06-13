@@ -6,6 +6,9 @@ from .custom_auth import (
     SignInFormSchema
 )
 from .documents import (
+    DocumentType,
+    DocumentTypeSlug,
+    GetDocumentTypeSlug,
     PassportRfSchema,
     ForeignPassportRfSchema,
     CreatePassportRfResponseSchema,

@@ -87,3 +87,9 @@ auth_refresh_token_not_found_exception = SsoException(
     error_code=SsoErrorCode.AUTH_REFRESH_TOKEN_NO_VALID,
     http_status_code=status.HTTP_404_NOT_FOUND
 )
+
+validate_document_type_data_exception = SsoException(
+    message="Document type and data don't match.",
+    error_code=SsoErrorCode.VALIDATION_ERROR,
+    http_status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+)
