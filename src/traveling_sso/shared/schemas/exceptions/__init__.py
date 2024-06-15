@@ -13,7 +13,7 @@ from .templates import (
     auth_access_denied_exception,
     auth_access_token_no_valid_exception,
     auth_refresh_token_no_valid_exception,
-    auth_refresh_token_not_found_exception,
+    auth_session_not_found_exception,
     validate_document_type_data_exception
 )
 
@@ -31,6 +31,6 @@ __all__ = (
     auth_access_denied_exception,
     auth_access_token_no_valid_exception,
     auth_refresh_token_no_valid_exception,
-    auth_refresh_token_not_found_exception,
+    auth_session_not_found_exception,
     validate_document_type_data_exception
 )

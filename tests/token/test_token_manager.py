@@ -36,7 +36,7 @@ async def test_create_token_session(session: AsyncSession, client: Client):
 async def test_get_token_session_by_session_id_not_found(session: AsyncSession):
     from traveling_sso.managers import get_token_session_by_session_id
     from traveling_sso.shared.schemas.exceptions import SsoException
-    from traveling_sso.shared.schemas.exceptions.templates import auth_refresh_token_not_found_exception
+    from traveling_sso.shared.schemas.exceptions.templates import auth_session_not_found_exception
 
     session_id = str(uuid4())
 
@@ -47,8 +47,8 @@ async def test_get_token_session_by_session_id_not_found(session: AsyncSession):
         )
 
         error = exc_info.value
-        assert error.error_code == auth_refresh_token_not_found_exception.error_code
-        assert error.http_status_code == auth_refresh_token_not_found_exception.http_status_code
+        assert error.error_code == auth_session_not_found_exception.error_code
+        assert error.http_status_code == auth_session_not_found_exception.http_status_code
 
 
 @allure.title("Get token session by id.")

@@ -1,13 +1,9 @@
-from unittest.mock import MagicMock, patch
-
 import allure
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid_extensions import uuid7
 
 from traveling_sso.database.models import User
-from traveling_sso.managers import create_or_update_passport_rf
-from traveling_sso.shared.schemas.protocol import CreatePassportRfResponseSchema
 
 
 @allure.title("Get User By ID")

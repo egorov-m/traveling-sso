@@ -82,9 +82,9 @@ auth_refresh_token_no_valid_exception = SsoException(
     http_status_code=status.HTTP_403_FORBIDDEN
 )
 
-auth_refresh_token_not_found_exception = SsoException(
+auth_session_not_found_exception = SsoException(
     message="Refresh token not found.",
-    error_code=SsoErrorCode.AUTH_REFRESH_TOKEN_NO_VALID,
+    error_code=SsoErrorCode.AUTH_SESSION_NOT_FOUND,
     http_status_code=status.HTTP_404_NOT_FOUND
 )
 

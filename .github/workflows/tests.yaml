@@ -23,7 +23,6 @@ jobs:
       PYTHONUNBUFFERED: 1
       SSO_HOST: localhost
       SSO_PORT: 33381
-      INIT_ROOT_ADMIN_USER: False
       DB_HOST: ${{ secrets.TEST_DB_HOST }}
       DB_PORT: ${{ secrets.TEST_DB_PORT }}
       POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
@@ -45,7 +44,7 @@ jobs:
         run: pip install -r requirements/default.txt -r requirements/tests.txt
 
       - name: Prepare database
-        run: utils/tests-downgrade.sh && utils/tests-upgrade.sh
+        run: utils/tests-downgrade.sh && utils/tests-upgrade.sh && utils/create-root-admin-user.sh
 
       - name: Testing
         run: pytest -v

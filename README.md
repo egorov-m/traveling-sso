@@ -35,7 +35,7 @@ Debug mode is enabled:
 ### Local launch in docker
 
 ```shell
-> docker compose up -d
+docker compose up -d
 ```
 
 **Swagger docs will be available:** http://localhost:33380/api/v1/docs
@@ -106,7 +106,7 @@ Debug mode is enabled:
 - docker compose has configured volumes: `./src:/app/src`
 
 ```shell
-> docker compose up -d
+docker compose up -d
 ```
 
 ### Installing dependencies
@@ -114,11 +114,11 @@ Debug mode is enabled:
 - requires Python 3.11 + pip;
 
 ```shell
-> python -m venv .venv
-> source ./.venv/Scripts/activate  # Windows
-> source ./.venv/bin/activate  # Linux
-> pip install -r ./requirements/default.txt
-> pip install -r ./requirements/tests.txt
+python -m venv .venv
+source ./.venv/Scripts/activate  # Windows
+source ./.venv/bin/activate  # Linux
+pip install -r ./requirements/default.txt
+pip install -r ./requirements/tests.txt
 ```
 
 ### Testing
@@ -127,38 +127,37 @@ Debug mode is enabled:
 - setup environment;
 
 ```shell
-> export PYTHONPATH=./src \
-> export PYTHONUNBUFFERED=1 \
-> export SSO_HOST=localhost \
-> export SSO_PORT=33381 \
-> export DEBUG=False \
-> export INIT_ROOT_ADMIN_USER=False \
-> export DB_HOST=localhost \
-> export DB_PORT=<db_port> \
-> export POSTGRES_DB=<db_name> \
-> export POSTGRES_USER=<db_user> \
-> export POSTGRES_PASSWORD=<db_password>
+export PYTHONPATH=./src \
+export PYTHONUNBUFFERED=1 \
+export SSO_HOST=localhost \
+export SSO_PORT=33381 \
+export DEBUG=False \
+export DB_HOST=localhost \
+export DB_PORT=<db_port> \
+export POSTGRES_DB=<db_name> \
+export POSTGRES_USER=<db_user> \
+export POSTGRES_PASSWORD=<db_password>
 ```
 
 ```shell
-> pytest -v
+pytest -v
 ```
 
 #### Allure Report
 
 ```shell
-> pytest -v --alluredir docs/allure-results
-> allure generate docs/allure-results -o docs/allure-report --clean --single-file
-> allure serve docs/allure-results/
+pytest -v --alluredir docs/allure-results
+allure generate docs/allure-results -o docs/allure-report --clean --single-file
+allure serve docs/allure-results/
 ```
 
 ### Migration generation
 
 ```shell
-> source ./.venv/Script/activate  # Windows
-> source ./.venv/bin/activate  # Linux
-> alembic -c src/traveling_sso/database/alembic.ini revision --autogenerate -m "<comment>"
-> docker compose restart sso-service
+source ./.venv/Script/activate  # Windows
+source ./.venv/bin/activate  # Linux
+alembic -c src/traveling_sso/database/alembic.ini revision --autogenerate -m "<comment>"
+docker compose restart sso-service
 ```
 
 [build-img]: https://github.com/egorov-m/traveling-sso/actions/workflows/docker-build.yaml/badge.svg?branch=develop

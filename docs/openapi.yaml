@@ -1143,6 +1143,6 @@ paths:
       - User (me)
 servers:
 - description: Local server
-  url: http://localhost:80
+  url: http://localhost:33381
 - description: Current server
-  url: http://0.0.0.0:80
+  url: http://localhost:33381
