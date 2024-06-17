@@ -7,6 +7,7 @@ from .documents import (
     get_passport_rf_by_user_id,
     get_foreign_passport_rf_by_user_id,
     create_passport_rf_new,
+    create_foreign_passport_rf_new,
     create_or_update_passport_rf,
     create_or_update_foreign_passport_rf,
     get_all_documents_by_user_id,

@@ -190,7 +190,7 @@ async def create_or_update_foreign_passport_rf(
 
 def _update_passport_fields(*, passport, fields: dict):
     for field, value in fields.items():
-        if value is not None:
+        if value is not None and hasattr(passport, field):
             setattr(passport, field, value)
 
 

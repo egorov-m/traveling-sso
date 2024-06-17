@@ -61,5 +61,5 @@ def get_error_response(
 
     return JSONResponse(
         status_code=http_status_code if settings.DEBUG else status.HTTP_400_BAD_REQUEST,
-        content=schema.model_dump()
+        content=schema.model_dump(exclude_unset=True),
     )

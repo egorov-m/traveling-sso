@@ -31,7 +31,7 @@ async def _get_client_by_uuid_id(session: AsyncSession, uuid_id: str):
 
 async def get_clients_for_user(*, session: AsyncSession, user_id) -> list[ClientSchema]:
     query = select(Client).where(Client.user_id == str(user_id))
-    clients = (await session.execute(query)).all()
+    clients = (await session.execute(query)).scalars().all()
 
     return [client.to_schema() for client in clients]
 

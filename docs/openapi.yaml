@@ -1,5 +1,22 @@
 components:
   schemas:
+    AboutSchema:
+      properties:
+        description:
+          title: Description
+          type: string
+        name:
+          title: Name
+          type: string
+        version:
+          title: Version
+          type: string
+      required:
+      - name
+      - description
+      - version
+      title: AboutSchema
+      type: object
     CreateForeignPassportRfResponseSchema:
       properties:
         birth_date:
@@ -7,15 +24,19 @@ components:
           title: Birth Date
           type: string
         birth_place:
+          maxLength: 255
           title: Birth Place
           type: string
         birth_place_latin:
+          maxLength: 255
           title: Birth Place Latin
           type: string
         citizenship:
+          maxLength: 50
           title: Citizenship
           type: string
         citizenship_latin:
+          maxLength: 50
           title: Citizenship Latin
           type: string
         expiry_date:
@@ -23,9 +44,11 @@ components:
           title: Expiry Date
           type: string
         first_name:
+          maxLength: 512
           title: First Name
           type: string
         first_name_latin:
+          maxLength: 512
           title: First Name Latin
           type: string
         gender:
@@ -39,20 +62,25 @@ components:
           title: Issue Date
           type: string
         issued_by:
+          maxLength: 255
           title: Issued By
           type: string
         last_name:
+          maxLength: 512
           title: Last Name
           type: string
         last_name_latin:
+          maxLength: 512
           title: Last Name Latin
           type: string
         number:
+          maxLength: 20
           title: Number
           type: string
         second_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Second Name
       required:
@@ -79,12 +107,15 @@ components:
           title: Birth Date
           type: string
         birth_place:
+          maxLength: 255
           title: Birth Place
           type: string
         division_code:
+          maxLength: 10
           title: Division Code
           type: string
         first_name:
+          maxLength: 512
           title: First Name
           type: string
         gender:
@@ -98,23 +129,31 @@ components:
           title: Issue Date
           type: string
         issued_by:
+          maxLength: 255
           title: Issued By
           type: string
         last_name:
+          maxLength: 512
           title: Last Name
           type: string
         number:
+          maxLength: 6
+          minLength: 6
           title: Number
           type: string
         registration_address:
+          maxLength: 255
           title: Registration Address
           type: string
         second_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Second Name
         series:
+          maxLength: 4
+          minLength: 4
           title: Series
           type: string
       required:
@@ -131,6 +170,18 @@ components:
       - registration_address
       title: CreatePassportRfResponseSchema
       type: object
+    DocumentType:
+      enum:
+      - passport_rf
+      - foreign_passport_rf
+      title: DocumentType
+      type: string
+    DocumentTypeSlug:
+      enum:
+      - passport_rf
+      - foreign_passport_rf
+      title: DocumentTypeSlug
+      type: string
     ForeignPassportRfSchema:
       properties:
         birth_date:
@@ -138,15 +189,19 @@ components:
           title: Birth Date
           type: string
         birth_place:
+          maxLength: 255
           title: Birth Place
           type: string
         birth_place_latin:
+          maxLength: 255
           title: Birth Place Latin
           type: string
         citizenship:
+          maxLength: 50
           title: Citizenship
           type: string
         citizenship_latin:
+          maxLength: 50
           title: Citizenship Latin
           type: string
         create_at:
@@ -158,9 +213,11 @@ components:
           title: Expiry Date
           type: string
         first_name:
+          maxLength: 512
           title: First Name
           type: string
         first_name_latin:
+          maxLength: 512
           title: First Name Latin
           type: string
         gender:
@@ -177,20 +234,25 @@ components:
           title: Issue Date
           type: string
         issued_by:
+          maxLength: 255
           title: Issued By
           type: string
         last_name:
+          maxLength: 512
           title: Last Name
           type: string
         last_name_latin:
+          maxLength: 512
           title: Last Name Latin
           type: string
         number:
+          maxLength: 20
           title: Number
           type: string
         second_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Second Name
         update_at:
@@ -217,6 +279,13 @@ components:
       - update_at
       title: ForeignPassportRfSchema
       type: object
+    GetDocumentTypeSlug:
+      enum:
+      - passport_rf
+      - foreign_passport_rf
+      - all
+      title: GetDocumentTypeSlug
+      type: string
     HTTPValidationError:
       properties:
         detail:
@@ -226,6 +295,15 @@ components:
           type: array
       title: HTTPValidationError
       type: object
+    HealthSchema:
+      properties:
+        status:
+          title: Status
+          type: string
+      required:
+      - status
+      title: HealthSchema
+      type: object
     PassportRfSchema:
       properties:
         birth_date:
@@ -233,6 +311,7 @@ components:
           title: Birth Date
           type: string
         birth_place:
+          maxLength: 255
           title: Birth Place
           type: string
         create_at:
@@ -240,9 +319,11 @@ components:
           title: Create At
           type: string
         division_code:
+          maxLength: 10
           title: Division Code
           type: string
         first_name:
+          maxLength: 512
           title: First Name
           type: string
         gender:
@@ -259,23 +340,31 @@ components:
           title: Issue Date
           type: string
         issued_by:
+          maxLength: 255
           title: Issued By
           type: string
         last_name:
+          maxLength: 512
           title: Last Name
           type: string
         number:
+          maxLength: 6
+          minLength: 6
           title: Number
           type: string
         registration_address:
+          maxLength: 255
           title: Registration Address
           type: string
         second_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Second Name
         series:
+          maxLength: 4
+          minLength: 4
           title: Series
           type: string
         update_at:
@@ -395,22 +484,26 @@ components:
           title: Birth Date
         birth_place:
           anyOf:
-          - type: string
+          - maxLength: 255
+            type: string
           - type: 'null'
           title: Birth Place
         birth_place_latin:
           anyOf:
-          - type: string
+          - maxLength: 255
+            type: string
           - type: 'null'
           title: Birth Place Latin
         citizenship:
           anyOf:
-          - type: string
+          - maxLength: 50
+            type: string
           - type: 'null'
           title: Citizenship
         citizenship_latin:
           anyOf:
-          - type: string
+          - maxLength: 50
+            type: string
           - type: 'null'
           title: Citizenship Latin
         expiry_date:
@@ -421,12 +514,14 @@ components:
           title: Expiry Date
         first_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: First Name
         first_name_latin:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: First Name Latin
         gender:
@@ -445,27 +540,32 @@ components:
           title: Issue Date
         issued_by:
           anyOf:
-          - type: string
+          - maxLength: 255
+            type: string
           - type: 'null'
           title: Issued By
         last_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Last Name
         last_name_latin:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Last Name Latin
         number:
           anyOf:
-          - type: string
+          - maxLength: 20
+            type: string
           - type: 'null'
           title: Number
         second_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Second Name
       title: UpdateForeignPassportRfResponseSchema
@@ -480,17 +580,20 @@ components:
           title: Birth Date
         birth_place:
           anyOf:
-          - type: string
+          - maxLength: 255
+            type: string
           - type: 'null'
           title: Birth Place
         division_code:
           anyOf:
-          - type: string
+          - maxLength: 10
+            type: string
           - type: 'null'
           title: Division Code
         first_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: First Name
         gender:
@@ -509,32 +612,40 @@ components:
           title: Issue Date
         issued_by:
           anyOf:
-          - type: string
+          - maxLength: 255
+            type: string
           - type: 'null'
           title: Issued By
         last_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Last Name
         number:
           anyOf:
-          - type: string
+          - maxLength: 6
+            minLength: 6
+            type: string
           - type: 'null'
           title: Number
         registration_address:
           anyOf:
-          - type: string
+          - maxLength: 255
+            type: string
           - type: 'null'
           title: Registration Address
         second_name:
           anyOf:
-          - type: string
+          - maxLength: 512
+            type: string
           - type: 'null'
           title: Second Name
         series:
           anyOf:
-          - type: string
+          - maxLength: 4
+            minLength: 4
+            type: string
           - type: 'null'
           title: Series
       title: UpdatePassportRfResponseSchema
@@ -637,7 +748,7 @@ components:
       type: http
 info:
   description: Authorization, authentication, user info microservice.
-  title: SSO
+  title: "SSO \u2014 Single Sign-On Service"
   version: 0.0.1
 openapi: 3.1.0
 paths:
@@ -805,81 +916,35 @@ paths:
       summary: Signup
       tags:
       - Auth
-  /api/v1/user/me/documents/all:
+  /api/v1/server/about:
     get:
-      description: Get data of all added documents.
-      operationId: get_all_documents_api_v1_user_me_documents_all_get
+      operationId: about_api_v1_server_about_get
       responses:
         '200':
           content:
             application/json:
               schema:
-                anyOf:
-                - additionalProperties:
-                    anyOf:
-                    - $ref: '#/components/schemas/PassportRfSchema'
-                    - $ref: '#/components/schemas/ForeignPassportRfSchema'
-                    - type: 'null'
-                  type: object
-                - type: 'null'
-                title: Response Get All Documents Api V1 User Me Documents All Get
+                $ref: '#/components/schemas/AboutSchema'
           description: Successful Response
-      security:
-      - Access token: []
-      summary: Get all documents
+      summary: Get info about the server
       tags:
-      - User (me)
+      - Server
+  /api/v1/server/health:
+    get:
+      operationId: health_api_v1_server_health_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthSchema'
+          description: Successful Response
+      summary: Health Check
+      tags:
+      - Server
   /api/v1/user/me/documents/foreign_passport_rf:
-    get:
-      description: Get passport data of the foreign passport of the Russian Federation.
-      operationId: get_foreign_passport_rf_api_v1_user_me_documents_foreign_passport_rf_get
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/ForeignPassportRfSchema'
-                - type: 'null'
-                title: Response Get Foreign Passport Rf Api V1 User Me Documents Foreign
-                  Passport Rf Get
-          description: Successful Response
-      security:
-      - Access token: []
-      summary: Get Foreign Passport RF
-      tags:
-      - User (me)
-    post:
-      operationId: create_foreign_passport_rf_api_v1_user_me_documents_foreign_passport_rf_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/CreateForeignPassportRfResponseSchema'
-              description: Foreign Passport data to be added.
-              title: Passport Rf
-        required: true
-      responses:
-        '202':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForeignPassportRfSchema'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - Access token: []
-      summary: Add Foreign Passport RF
-      tags:
-      - User (me)
-    put:
-      operationId: update_foreign_passport_rf_api_v1_user_me_documents_foreign_passport_rf_put
+    patch:
+      operationId: update_foreign_passport_rf_api_v1_user_me_documents_foreign_passport_rf_patch
       requestBody:
         content:
           application/json:
@@ -908,56 +973,8 @@ paths:
       tags:
       - User (me)
   /api/v1/user/me/documents/passport_rf:
-    get:
-      description: Get passport data of the passport of the Russian Federation.
-      operationId: get_passport_rf_api_v1_user_me_documents_passport_rf_get
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                anyOf:
-                - $ref: '#/components/schemas/PassportRfSchema'
-                - type: 'null'
-                title: Response Get Passport Rf Api V1 User Me Documents Passport
-                  Rf Get
-          description: Successful Response
-      security:
-      - Access token: []
-      summary: Get Passport RF
-      tags:
-      - User (me)
-    post:
-      operationId: create_passport_rf_api_v1_user_me_documents_passport_rf_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/CreatePassportRfResponseSchema'
-              description: Passport data to be added.
-              title: Passport Rf
-        required: true
-      responses:
-        '202':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PassportRfSchema'
-          description: Successful Response
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - Access token: []
-      summary: Add Passport RF
-      tags:
-      - User (me)
-    put:
-      operationId: update_passport_rf_api_v1_user_me_documents_passport_rf_put
+    patch:
+      operationId: update_passport_rf_api_v1_user_me_documents_passport_rf_patch
       requestBody:
         content:
           application/json:
@@ -985,6 +1002,84 @@ paths:
       summary: Update Passport RF
       tags:
       - User (me)
+  /api/v1/user/me/documents/{document_type}:
+    get:
+      description: Get document data.
+      operationId: get_document_api_v1_user_me_documents__document_type__get
+      parameters:
+      - in: path
+        name: document_type
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetDocumentTypeSlug'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/PassportRfSchema'
+                - $ref: '#/components/schemas/ForeignPassportRfSchema'
+                - additionalProperties:
+                    anyOf:
+                    - $ref: '#/components/schemas/PassportRfSchema'
+                    - $ref: '#/components/schemas/ForeignPassportRfSchema'
+                    - type: 'null'
+                  type: object
+                - type: 'null'
+                title: Response Get Document Api V1 User Me Documents  Document Type  Get
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Get Document
+      tags:
+      - User (me)
+    post:
+      operationId: create_document_api_v1_user_me_documents__document_type__post
+      parameters:
+      - in: path
+        name: document_type
+        required: true
+        schema:
+          $ref: '#/components/schemas/DocumentTypeSlug'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/CreatePassportRfResponseSchema'
+              - $ref: '#/components/schemas/CreateForeignPassportRfResponseSchema'
+              description: Document data to be added.
+              title: Document Data
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/PassportRfSchema'
+                - $ref: '#/components/schemas/ForeignPassportRfSchema'
+                title: Response Create Document Api V1 User Me Documents  Document
+                  Type  Post
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Add document
+      tags:
+      - User (me)
   /api/v1/user/me/info:
     get:
       description: Get base information about the user.
@@ -1001,9 +1096,9 @@ paths:
       summary: Get Userinfo
       tags:
       - User (me)
-    put:
+    patch:
       description: Update base information about the user.
-      operationId: update_info_api_v1_user_me_info_put
+      operationId: update_info_api_v1_user_me_info_patch
       requestBody:
         content:
           application/json:
@@ -1050,4 +1145,4 @@ servers:
 - description: Local server
   url: http://localhost:33381
 - description: Current server
-  url: http://127.0.0.1:33381
+  url: http://localhost:33381

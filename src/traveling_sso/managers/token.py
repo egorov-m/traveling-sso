@@ -9,7 +9,7 @@ from sqlalchemy.sql.functions import count
 from traveling_sso.shared.schemas.protocol import TokenResponseSchema, UserSchema, UserRoleType, TokenSessionSchema
 from traveling_sso.shared.schemas.exceptions.templates import (
     auth_access_token_no_valid_exception,
-    auth_refresh_token_not_found_exception, auth_refresh_token_no_valid_exception
+    auth_session_not_found_exception, auth_refresh_token_no_valid_exception
 )
 from ..config import settings
 from ..database.models import Client, TokenSession, User
@@ -120,7 +120,7 @@ async def get_token_session_by_session_id(*, session: AsyncSession, session_id: 
     )
     token = (await session.execute(query)).scalar()
     if token is None:
-        raise auth_refresh_token_not_found_exception
+        raise auth_session_not_found_exception
 
     return token
 
@@ -202,7 +202,7 @@ async def revoke_token_session(
     session_id = str(session_id)
     token = await get_token_session_by_session_id(session=session, session_id=session_id)
     if str(user.id) != token.user_id and user.role != UserRoleType.admin:
-        raise auth_refresh_token_not_found_exception
+        raise auth_session_not_found_exception
     token.refresh_token_revoked_at = int(utcnow().timestamp())
     session.add(token)
     await session.flush()

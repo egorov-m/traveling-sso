@@ -15,7 +15,7 @@ class Settings(BaseSettings):
         if not self.API_SERVERS:
             self.API_SERVERS = self._get_default_api_servers()
 
-    PROJECT_NAME: str = "SSO"
+    PROJECT_NAME: str = "SSO — Single Sign-On Service"
     PROJECT_DESCRIPTION: str = "Authorization, authentication, user info microservice."
     PROJECT_VERSION: str = "0.0.1"
     API_V1_STR: str = "/api/v1"
