@@ -18,12 +18,14 @@ class SsoErrorCode(IntEnum):
     # 0-999: general errors
     GENERIC_ERROR = 0
     BASE_NOT_FOUND = 1
+    VALIDATION_ERROR = 2
 
     # 1000-1999: auth errors
     AUTH_UNAUTHORIZED = 1000
     AUTH_FORBIDDEN = 1001
     AUTH_ACCESS_TOKEN_NO_VALID = 1002
     AUTH_REFRESH_TOKEN_NO_VALID = 1003
+    AUTH_SESSION_NOT_FOUND = 1004
 
     # 2000-2999: client errors
     CLIENT_NOT_FOUND = 2000

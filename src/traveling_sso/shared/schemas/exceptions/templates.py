@@ -34,6 +34,18 @@ user_conflict_exception = SsoException(
     http_status_code=status.HTTP_409_CONFLICT
 )
 
+passport_rf_already_exists_exception = SsoException(
+    message="Passport RF already exists.",
+    error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,
+    http_status_code=status.HTTP_400_BAD_REQUEST
+)
+
+foreign_passport_rf_already_exists_exception = SsoException(
+    message="Foreign passport RF already exists.",
+    error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,
+    http_status_code=status.HTTP_400_BAD_REQUEST
+)
+
 passport_rf_not_specified_exception = SsoException(
     message="Passport RF not specified.",
     error_code=SsoErrorCode.DOCUMENT_PASSPORT_RF_NOT_SPECIFIED,
@@ -68,4 +80,16 @@ auth_refresh_token_no_valid_exception = SsoException(
     message="Refresh token no valid.",
     error_code=SsoErrorCode.AUTH_REFRESH_TOKEN_NO_VALID,
     http_status_code=status.HTTP_403_FORBIDDEN
+)
+
+auth_session_not_found_exception = SsoException(
+    message="Refresh token not found.",
+    error_code=SsoErrorCode.AUTH_SESSION_NOT_FOUND,
+    http_status_code=status.HTTP_404_NOT_FOUND
+)
+
+validate_document_type_data_exception = SsoException(
+    message="Document type and data don't match.",
+    error_code=SsoErrorCode.VALIDATION_ERROR,
+    http_status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
 )

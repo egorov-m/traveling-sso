@@ -1,25 +1,30 @@
 from datetime import date
 from functools import lru_cache
-from typing import Optional
+from typing import Optional, Literal
 from pathlib import Path
 from urllib.parse import quote_plus
 
-from pydantic import Field
+from pydantic import Field, ConfigDict
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "SSO"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.API_SERVERS:
+            self.API_SERVERS = self._get_default_api_servers()
+
+    PROJECT_NAME: str = "SSO — Single Sign-On Service"
     PROJECT_DESCRIPTION: str = "Authorization, authentication, user info microservice."
     PROJECT_VERSION: str = "0.0.1"
     API_V1_STR: str = "/api/v1"
 
-    API_SERVERS: list = [
-        {
-            "url": "http://localhost:33380",
-            "description": "Local server"
-        }
-    ]
+    SSO_PROTOCOL: Literal["http", "https"] = "http"
+    SSO_HOST: str = "0.0.0.0"
+    SSO_PORT: int = Field(80, ge=0, le=65535)
+
+    API_SERVERS: list = []
 
     LOG_LEVEL: str = "INFO"
     LOGGER_NAME: str = "logger.traveling_sso"
@@ -104,6 +109,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRES_IN: int = 10800  # 60 * 60 * 3
     REFRESH_TOKEN_EXPIRES_IN: int = 31104000  # 60 * 60 * 24 * 30 * 12
     REFRESH_TOKEN_COOKIE_NAME: str = "sso_refresh_token"
+    REFRESH_TOKEN_HEADER_NAME: str = "x-sso-refresh-token"
+    REFRESH_TOKEN_COOKIE_PATH: str = "/api/v1/auth/"
+    IS_REFRESH_TOKEN_VIA_COOKIE: bool = True
+    ACTIVE_REFRESH_TOKEN_MAX_COUNT: int = 5
     CLIENT_ID_HEADER_NAME: str = "x-sso-client-id"
     CLIENT_SECRET_KEY_SIZE: int = Field(2048, ge=512)
     CLIENT_SECRET_EXPIRES_DAYS_IN: int = 1095  # 3 years
@@ -117,6 +126,7 @@ class Settings(BaseSettings):
     DB_NAME: str = Field("project.traveling_sso", alias="POSTGRES_DB")
     DB_USER: str = Field("user.traveling_sso", alias="POSTGRES_USER")
     DB_PASSWORD: str = Field("postgres", alias="POSTGRES_PASSWORD")
+    DB_POOL_PRE_PING: bool = True
     DB_POOL_SIZE: int = 75
     DB_MAX_OVERFLOW: int = 20
 
@@ -126,10 +136,23 @@ class Settings(BaseSettings):
         return (f"{self.DB_SCHEMA}+{self.DB_DRIVER}://{self.DB_USER}:{quote_plus(self.DB_PASSWORD)}@"
                 f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?ssl={self.DB_SSL}")
 
-    class Config:
-        env_file = Path(__file__).resolve().parent.parent.parent / ".env"
-        env_file_encoding = "utf-8"
+    def _get_default_api_servers(self):
+        return [
+            {
+                "url": f"http://localhost:{self.SSO_PORT}",
+                "description": "Local server"
+            },
+            {
+                "url": f"{self.SSO_PROTOCOL}://{self.SSO_HOST}:{self.SSO_PORT}",
+                "description": "Current server"
+            }
+        ]
+
+    model_config = ConfigDict(
+        env_file=Path(__file__).resolve().parent.parent.parent / ".env",
+        env_file_encoding = "utf-8",
         case_sensitive = False
+    )
 
 
 @lru_cache

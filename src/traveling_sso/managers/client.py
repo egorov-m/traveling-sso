@@ -31,17 +31,16 @@ async def _get_client_by_uuid_id(session: AsyncSession, uuid_id: str):
 
 async def get_clients_for_user(*, session: AsyncSession, user_id) -> list[ClientSchema]:
     query = select(Client).where(Client.user_id == str(user_id))
-    clients = (await session.execute(query)).all()
+    clients = (await session.execute(query)).scalars().all()
 
     return [client.to_schema() for client in clients]
 
 
 async def create_client(*, session: AsyncSession, user: User) -> ClientSchema:
-    keys = _generate_pair_keys()
+    keys = generate_pair_secrets_keys()
 
     client = Client(
         client_id=generate_token(48),
-        client_public_secret=keys[0],
         client_private_secret=keys[1],
         client_id_issued_at=int(utcnow().timestamp()),
         client_secret_expires_at=int(
@@ -76,7 +75,7 @@ async def create_or_update_client(
                 "user": user
             })
     if client is None:
-        keys = _generate_pair_keys()
+        keys = generate_pair_secrets_keys()
         client = Client(
             client_id=client_id or generate_token(48),
             client_private_secret=client_private_secret or keys[1],
@@ -93,7 +92,7 @@ async def create_or_update_client(
     return client.to_schema()
 
 
-def _generate_pair_keys() -> tuple[str, str]:
+def generate_pair_secrets_keys() -> tuple[str, str]:
     rsa_key = (RSAKey.generate_key(settings.CLIENT_SECRET_KEY_SIZE, is_private=True))
     public_key = rsa_key.get_public_key()
     private_key = rsa_key.get_private_key()

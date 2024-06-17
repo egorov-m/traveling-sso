@@ -3,10 +3,11 @@ requires = ["setuptools>=65.5.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
+filterwarnings = "ignore::DeprecationWarning"
 addopts = "--cov=traveling_sso"
-testpaths = [
-    "tests",
-]
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
 
 [tool.mypy]
 mypy_path = "src"

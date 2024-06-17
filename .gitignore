@@ -22,5 +22,7 @@ venv.bak/
 
 *.log
 *.db
+.coverage
 
+docs/allure-results/
 sso_postgres_data/

@@ -1,0 +1,53 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  tests:
+    name: Testing
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    environment: tests
+
+    env:
+      DEBUG: False
+      PYTHON_VERSION: 3.11
+      PYTHONPATH: src
+      PYTHONUNBUFFERED: 1
+      SSO_HOST: localhost
+      SSO_PORT: 33381
+      DB_HOST: ${{ secrets.TEST_DB_HOST }}
+      DB_PORT: ${{ secrets.TEST_DB_PORT }}
+      POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
+      POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: "requirements/*.txt"
+
+      - name: Installing dependencies
+        run: pip install -r requirements/default.txt -r requirements/tests.txt
+
+      - name: Prepare database
+        run: utils/tests-downgrade.sh && utils/tests-upgrade.sh && utils/create-root-admin-user.sh
+
+      - name: Testing
+        run: pytest -v
+
+      - name: Cleaning database
+        run: utils/tests-downgrade.sh

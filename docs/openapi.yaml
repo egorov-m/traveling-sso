@@ -1,0 +1,1148 @@
+components:
+  schemas:
+    AboutSchema:
+      properties:
+        description:
+          title: Description
+          type: string
+        name:
+          title: Name
+          type: string
+        version:
+          title: Version
+          type: string
+      required:
+      - name
+      - description
+      - version
+      title: AboutSchema
+      type: object
+    CreateForeignPassportRfResponseSchema:
+      properties:
+        birth_date:
+          format: date
+          title: Birth Date
+          type: string
+        birth_place:
+          maxLength: 255
+          title: Birth Place
+          type: string
+        birth_place_latin:
+          maxLength: 255
+          title: Birth Place Latin
+          type: string
+        citizenship:
+          maxLength: 50
+          title: Citizenship
+          type: string
+        citizenship_latin:
+          maxLength: 50
+          title: Citizenship Latin
+          type: string
+        expiry_date:
+          format: date
+          title: Expiry Date
+          type: string
+        first_name:
+          maxLength: 512
+          title: First Name
+          type: string
+        first_name_latin:
+          maxLength: 512
+          title: First Name Latin
+          type: string
+        gender:
+          enum:
+          - "\u041C"
+          - "\u0416"
+          title: Gender
+          type: string
+        issue_date:
+          format: date
+          title: Issue Date
+          type: string
+        issued_by:
+          maxLength: 255
+          title: Issued By
+          type: string
+        last_name:
+          maxLength: 512
+          title: Last Name
+          type: string
+        last_name_latin:
+          maxLength: 512
+          title: Last Name Latin
+          type: string
+        number:
+          maxLength: 20
+          title: Number
+          type: string
+        second_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Second Name
+      required:
+      - number
+      - first_name
+      - first_name_latin
+      - last_name
+      - last_name_latin
+      - citizenship
+      - citizenship_latin
+      - birth_date
+      - birth_place
+      - birth_place_latin
+      - gender
+      - issued_by
+      - issue_date
+      - expiry_date
+      title: CreateForeignPassportRfResponseSchema
+      type: object
+    CreatePassportRfResponseSchema:
+      properties:
+        birth_date:
+          format: date
+          title: Birth Date
+          type: string
+        birth_place:
+          maxLength: 255
+          title: Birth Place
+          type: string
+        division_code:
+          maxLength: 10
+          title: Division Code
+          type: string
+        first_name:
+          maxLength: 512
+          title: First Name
+          type: string
+        gender:
+          enum:
+          - "\u041C"
+          - "\u0416"
+          title: Gender
+          type: string
+        issue_date:
+          format: date
+          title: Issue Date
+          type: string
+        issued_by:
+          maxLength: 255
+          title: Issued By
+          type: string
+        last_name:
+          maxLength: 512
+          title: Last Name
+          type: string
+        number:
+          maxLength: 6
+          minLength: 6
+          title: Number
+          type: string
+        registration_address:
+          maxLength: 255
+          title: Registration Address
+          type: string
+        second_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Second Name
+        series:
+          maxLength: 4
+          minLength: 4
+          title: Series
+          type: string
+      required:
+      - series
+      - number
+      - first_name
+      - last_name
+      - birth_date
+      - birth_place
+      - gender
+      - issued_by
+      - division_code
+      - issue_date
+      - registration_address
+      title: CreatePassportRfResponseSchema
+      type: object
+    DocumentType:
+      enum:
+      - passport_rf
+      - foreign_passport_rf
+      title: DocumentType
+      type: string
+    DocumentTypeSlug:
+      enum:
+      - passport_rf
+      - foreign_passport_rf
+      title: DocumentTypeSlug
+      type: string
+    ForeignPassportRfSchema:
+      properties:
+        birth_date:
+          format: date
+          title: Birth Date
+          type: string
+        birth_place:
+          maxLength: 255
+          title: Birth Place
+          type: string
+        birth_place_latin:
+          maxLength: 255
+          title: Birth Place Latin
+          type: string
+        citizenship:
+          maxLength: 50
+          title: Citizenship
+          type: string
+        citizenship_latin:
+          maxLength: 50
+          title: Citizenship Latin
+          type: string
+        create_at:
+          format: date-time
+          title: Create At
+          type: string
+        expiry_date:
+          format: date
+          title: Expiry Date
+          type: string
+        first_name:
+          maxLength: 512
+          title: First Name
+          type: string
+        first_name_latin:
+          maxLength: 512
+          title: First Name Latin
+          type: string
+        gender:
+          enum:
+          - "\u041C"
+          - "\u0416"
+          title: Gender
+          type: string
+        is_verified:
+          title: Is Verified
+          type: boolean
+        issue_date:
+          format: date
+          title: Issue Date
+          type: string
+        issued_by:
+          maxLength: 255
+          title: Issued By
+          type: string
+        last_name:
+          maxLength: 512
+          title: Last Name
+          type: string
+        last_name_latin:
+          maxLength: 512
+          title: Last Name Latin
+          type: string
+        number:
+          maxLength: 20
+          title: Number
+          type: string
+        second_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Second Name
+        update_at:
+          format: date-time
+          title: Update At
+          type: string
+      required:
+      - number
+      - first_name
+      - first_name_latin
+      - last_name
+      - last_name_latin
+      - citizenship
+      - citizenship_latin
+      - birth_date
+      - birth_place
+      - birth_place_latin
+      - gender
+      - issued_by
+      - issue_date
+      - expiry_date
+      - is_verified
+      - create_at
+      - update_at
+      title: ForeignPassportRfSchema
+      type: object
+    GetDocumentTypeSlug:
+      enum:
+      - passport_rf
+      - foreign_passport_rf
+      - all
+      title: GetDocumentTypeSlug
+      type: string
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    HealthSchema:
+      properties:
+        status:
+          title: Status
+          type: string
+      required:
+      - status
+      title: HealthSchema
+      type: object
+    PassportRfSchema:
+      properties:
+        birth_date:
+          format: date
+          title: Birth Date
+          type: string
+        birth_place:
+          maxLength: 255
+          title: Birth Place
+          type: string
+        create_at:
+          format: date-time
+          title: Create At
+          type: string
+        division_code:
+          maxLength: 10
+          title: Division Code
+          type: string
+        first_name:
+          maxLength: 512
+          title: First Name
+          type: string
+        gender:
+          enum:
+          - "\u041C"
+          - "\u0416"
+          title: Gender
+          type: string
+        is_verified:
+          title: Is Verified
+          type: boolean
+        issue_date:
+          format: date
+          title: Issue Date
+          type: string
+        issued_by:
+          maxLength: 255
+          title: Issued By
+          type: string
+        last_name:
+          maxLength: 512
+          title: Last Name
+          type: string
+        number:
+          maxLength: 6
+          minLength: 6
+          title: Number
+          type: string
+        registration_address:
+          maxLength: 255
+          title: Registration Address
+          type: string
+        second_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Second Name
+        series:
+          maxLength: 4
+          minLength: 4
+          title: Series
+          type: string
+        update_at:
+          format: date-time
+          title: Update At
+          type: string
+      required:
+      - series
+      - number
+      - first_name
+      - last_name
+      - birth_date
+      - birth_place
+      - gender
+      - issued_by
+      - division_code
+      - issue_date
+      - registration_address
+      - is_verified
+      - create_at
+      - update_at
+      title: PassportRfSchema
+      type: object
+    SignInFormSchema:
+      properties:
+        login:
+          anyOf:
+          - format: email
+            type: string
+          - pattern: ^[a-zA-Z][a-zA-Z0-9_]*$
+            type: string
+          description: Username or email for login
+          title: Login
+        password:
+          title: Password
+          type: string
+      required:
+      - login
+      - password
+      title: SignInFormSchema
+      type: object
+    SignUpFormSchema:
+      properties:
+        email:
+          format: email
+          title: Email
+          type: string
+        password:
+          maxLength: 255
+          minLength: 8
+          title: Password
+          type: string
+      required:
+      - email
+      - password
+      title: SignUpFormSchema
+      type: object
+    TokenResponseSchema:
+      properties:
+        access_token:
+          title: Access Token
+          type: string
+        expires:
+          description: Expires of refresh token.
+          title: Expires
+          type: integer
+        refresh_token:
+          anyOf:
+          - format: uuid
+            type: string
+          - type: 'null'
+          title: Refresh Token
+        token_type:
+          allOf:
+          - $ref: '#/components/schemas/TokenType'
+          default: Bearer
+      required:
+      - access_token
+      - expires
+      title: TokenResponseSchema
+      type: object
+    TokenSessionSchema:
+      properties:
+        expires_at:
+          title: Expires At
+          type: integer
+        is_current:
+          default: false
+          title: Is Current
+          type: boolean
+        issued_at:
+          title: Issued At
+          type: integer
+        session_id:
+          format: uuid
+          title: Session Id
+          type: string
+      required:
+      - session_id
+      - issued_at
+      - expires_at
+      title: TokenSessionSchema
+      type: object
+    TokenType:
+      const: Bearer
+      enum:
+      - Bearer
+      title: TokenType
+      type: string
+    UpdateForeignPassportRfResponseSchema:
+      properties:
+        birth_date:
+          anyOf:
+          - format: date
+            type: string
+          - type: 'null'
+          title: Birth Date
+        birth_place:
+          anyOf:
+          - maxLength: 255
+            type: string
+          - type: 'null'
+          title: Birth Place
+        birth_place_latin:
+          anyOf:
+          - maxLength: 255
+            type: string
+          - type: 'null'
+          title: Birth Place Latin
+        citizenship:
+          anyOf:
+          - maxLength: 50
+            type: string
+          - type: 'null'
+          title: Citizenship
+        citizenship_latin:
+          anyOf:
+          - maxLength: 50
+            type: string
+          - type: 'null'
+          title: Citizenship Latin
+        expiry_date:
+          anyOf:
+          - format: date
+            type: string
+          - type: 'null'
+          title: Expiry Date
+        first_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: First Name
+        first_name_latin:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: First Name Latin
+        gender:
+          anyOf:
+          - enum:
+            - "\u041C"
+            - "\u0416"
+            type: string
+          - type: 'null'
+          title: Gender
+        issue_date:
+          anyOf:
+          - format: date
+            type: string
+          - type: 'null'
+          title: Issue Date
+        issued_by:
+          anyOf:
+          - maxLength: 255
+            type: string
+          - type: 'null'
+          title: Issued By
+        last_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Last Name
+        last_name_latin:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Last Name Latin
+        number:
+          anyOf:
+          - maxLength: 20
+            type: string
+          - type: 'null'
+          title: Number
+        second_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Second Name
+      title: UpdateForeignPassportRfResponseSchema
+      type: object
+    UpdatePassportRfResponseSchema:
+      properties:
+        birth_date:
+          anyOf:
+          - format: date
+            type: string
+          - type: 'null'
+          title: Birth Date
+        birth_place:
+          anyOf:
+          - maxLength: 255
+            type: string
+          - type: 'null'
+          title: Birth Place
+        division_code:
+          anyOf:
+          - maxLength: 10
+            type: string
+          - type: 'null'
+          title: Division Code
+        first_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: First Name
+        gender:
+          anyOf:
+          - enum:
+            - "\u041C"
+            - "\u0416"
+            type: string
+          - type: 'null'
+          title: Gender
+        issue_date:
+          anyOf:
+          - format: date
+            type: string
+          - type: 'null'
+          title: Issue Date
+        issued_by:
+          anyOf:
+          - maxLength: 255
+            type: string
+          - type: 'null'
+          title: Issued By
+        last_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Last Name
+        number:
+          anyOf:
+          - maxLength: 6
+            minLength: 6
+            type: string
+          - type: 'null'
+          title: Number
+        registration_address:
+          anyOf:
+          - maxLength: 255
+            type: string
+          - type: 'null'
+          title: Registration Address
+        second_name:
+          anyOf:
+          - maxLength: 512
+            type: string
+          - type: 'null'
+          title: Second Name
+        series:
+          anyOf:
+          - maxLength: 4
+            minLength: 4
+            type: string
+          - type: 'null'
+          title: Series
+      title: UpdatePassportRfResponseSchema
+      type: object
+    UpdateUserInfoRequestSchema:
+      properties:
+        email:
+          anyOf:
+          - format: email
+            type: string
+          - type: 'null'
+          title: Email
+        password:
+          anyOf:
+          - maxLength: 255
+            minLength: 8
+            type: string
+          - type: 'null'
+          title: Password
+        username:
+          anyOf:
+          - pattern: ^[a-zA-Z0-9_]{5,32}$
+            type: string
+          - type: 'null'
+          title: Username
+      title: UpdateUserInfoRequestSchema
+      type: object
+    UserRoleType:
+      enum:
+      - user
+      - admin
+      title: UserRoleType
+      type: string
+    UserSchema:
+      properties:
+        created_at:
+          format: date-time
+          title: Created At
+          type: string
+        email:
+          format: email
+          title: Email
+          type: string
+        id:
+          format: uuid
+          title: Id
+          type: string
+        is_foreign_passport:
+          default: false
+          title: Is Foreign Passport
+          type: boolean
+        is_passport_rf:
+          default: false
+          title: Is Passport Rf
+          type: boolean
+        role:
+          $ref: '#/components/schemas/UserRoleType'
+        updated_at:
+          format: date-time
+          title: Updated At
+          type: string
+        username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Username
+      required:
+      - id
+      - email
+      - role
+      - created_at
+      - updated_at
+      title: UserSchema
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+  securitySchemes:
+    Access token:
+      description: Access token in jwt format.
+      scheme: bearer
+      type: http
+info:
+  description: Authorization, authentication, user info microservice.
+  title: "SSO \u2014 Single Sign-On Service"
+  version: 0.0.1
+openapi: 3.1.0
+paths:
+  /api/v1/auth/logout:
+    post:
+      description: A refresh token revoke will be performed, similar to `/session/revoke`.
+      operationId: logout_api_v1_auth_logout_post
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                title: Response Logout Api V1 Auth Logout Post
+                type: boolean
+          description: Successful Response
+      security:
+      - Access token: []
+      summary: Logout session
+      tags:
+      - Auth
+  /api/v1/auth/session/refresh:
+    post:
+      operationId: refresh_session_api_v1_auth_session_refresh_post
+      parameters:
+      - in: header
+        name: x-sso-refresh-token
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Sso-Refresh-Token
+      - in: cookie
+        name: sso_refresh_token
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sso Refresh Token
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseSchema'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Refresh access token
+      tags:
+      - Auth
+  /api/v1/auth/session/revoke:
+    post:
+      operationId: revoke_session_api_v1_auth_session_revoke_post
+      parameters:
+      - description: Pass the session_id you want to revoke, otherwise the current
+          token will be revoked.
+        in: query
+        name: session_id
+        required: false
+        schema:
+          anyOf:
+          - format: uuid
+            type: string
+          - type: 'null'
+          description: Pass the session_id you want to revoke, otherwise the current
+            token will be revoked.
+          title: Session Id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                title: Response Revoke Session Api V1 Auth Session Revoke Post
+                type: boolean
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Revoke refresh token
+      tags:
+      - Auth
+  /api/v1/auth/signin:
+    post:
+      operationId: signin_api_v1_auth_signin_post
+      parameters:
+      - in: query
+        name: client_id
+        required: true
+        schema:
+          maxLength: 48
+          minLength: 48
+          title: Client Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInFormSchema'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseSchema'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Signin
+      tags:
+      - Auth
+  /api/v1/auth/signup:
+    post:
+      operationId: signup_api_v1_auth_signup_post
+      parameters:
+      - description: Transmit to get the tokens right away.
+        in: query
+        name: client_id
+        required: false
+        schema:
+          anyOf:
+          - maxLength: 48
+            minLength: 48
+            type: string
+          - type: 'null'
+          description: Transmit to get the tokens right away.
+          title: Client Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpFormSchema'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TokenResponseSchema'
+                - type: 'null'
+                title: Response Signup Api V1 Auth Signup Post
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Signup
+      tags:
+      - Auth
+  /api/v1/server/about:
+    get:
+      operationId: about_api_v1_server_about_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AboutSchema'
+          description: Successful Response
+      summary: Get info about the server
+      tags:
+      - Server
+  /api/v1/server/health:
+    get:
+      operationId: health_api_v1_server_health_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthSchema'
+          description: Successful Response
+      summary: Health Check
+      tags:
+      - Server
+  /api/v1/user/me/documents/foreign_passport_rf:
+    patch:
+      operationId: update_foreign_passport_rf_api_v1_user_me_documents_foreign_passport_rf_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateForeignPassportRfResponseSchema'
+              description: Foreign Passport data to be updated.
+              title: Passport Rf
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForeignPassportRfSchema'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Update Foreign Passport RF
+      tags:
+      - User (me)
+  /api/v1/user/me/documents/passport_rf:
+    patch:
+      operationId: update_passport_rf_api_v1_user_me_documents_passport_rf_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdatePassportRfResponseSchema'
+              description: Passport data to be updated.
+              title: Passport Rf
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassportRfSchema'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Update Passport RF
+      tags:
+      - User (me)
+  /api/v1/user/me/documents/{document_type}:
+    get:
+      description: Get document data.
+      operationId: get_document_api_v1_user_me_documents__document_type__get
+      parameters:
+      - in: path
+        name: document_type
+        required: true
+        schema:
+          $ref: '#/components/schemas/GetDocumentTypeSlug'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/PassportRfSchema'
+                - $ref: '#/components/schemas/ForeignPassportRfSchema'
+                - additionalProperties:
+                    anyOf:
+                    - $ref: '#/components/schemas/PassportRfSchema'
+                    - $ref: '#/components/schemas/ForeignPassportRfSchema'
+                    - type: 'null'
+                  type: object
+                - type: 'null'
+                title: Response Get Document Api V1 User Me Documents  Document Type  Get
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Get Document
+      tags:
+      - User (me)
+    post:
+      operationId: create_document_api_v1_user_me_documents__document_type__post
+      parameters:
+      - in: path
+        name: document_type
+        required: true
+        schema:
+          $ref: '#/components/schemas/DocumentTypeSlug'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/CreatePassportRfResponseSchema'
+              - $ref: '#/components/schemas/CreateForeignPassportRfResponseSchema'
+              description: Document data to be added.
+              title: Document Data
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/PassportRfSchema'
+                - $ref: '#/components/schemas/ForeignPassportRfSchema'
+                title: Response Create Document Api V1 User Me Documents  Document
+                  Type  Post
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Add document
+      tags:
+      - User (me)
+  /api/v1/user/me/info:
+    get:
+      description: Get base information about the user.
+      operationId: info_api_v1_user_me_info_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+          description: Successful Response
+      security:
+      - Access token: []
+      summary: Get Userinfo
+      tags:
+      - User (me)
+    patch:
+      description: Update base information about the user.
+      operationId: update_info_api_v1_user_me_info_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserInfoRequestSchema'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - Access token: []
+      summary: Update Userinfo
+      tags:
+      - User (me)
+  /api/v1/user/me/sessions:
+    get:
+      operationId: get_sessions_api_v1_user_me_sessions_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TokenSessionSchema'
+                title: Response Get Sessions Api V1 User Me Sessions Get
+                type: array
+          description: Successful Response
+      security:
+      - Access token: []
+      summary: Get user sessions
+      tags:
+      - User (me)
+servers:
+- description: Local server
+  url: http://localhost:33381
+- description: Current server
+  url: http://localhost:33381
