@@ -11,7 +11,7 @@ from traveling_sso.main import app
 from traveling_sso.config import settings
 from traveling_sso.database.core import get_session
 
-from factories import UserFactory, ClientFactory, TokenSessionFactory
+from factories import UserFactory, ClientFactory, TokenSessionFactory, PassportRfFactory, ForeignPassportRfFactory
 from utils import validate_token_schema, validate_sessions_list
 
 
@@ -35,6 +35,18 @@ async def session():
 @allure.title("Prepare user in database for the test.")
 async def user(session):
     return await UserFactory(session)
+
+
+@pytest.fixture
+@allure.title("Prepare PassportRf instance for tests.")
+def passport_rf(session):
+    return PassportRfFactory(session)
+
+
+@pytest.fixture
+@allure.title("Prepare ForeignPassportRf instance for tests.")
+def foreign_passport_rf(session):
+    return ForeignPassportRfFactory(session)
 
 
 @pytest.fixture()

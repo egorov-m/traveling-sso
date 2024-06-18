@@ -90,21 +90,21 @@ class PassportRfFactory(metaclass=_FactoryMeta):
 
 
 class ForeignPassportRfFactory(metaclass=_FactoryMeta):
-    number = "00 0000000",
-    first_name = "Firstname",
-    first_name_latin = "Firstname",
-    last_name = "LastName",
-    last_name_latin = "LastName",
-    second_name = "SecondName",
-    citizenship = "Citizenship",
-    citizenship_latin = "Citizenship",
-    birth_date = date(2000, 1, 1),
-    birth_place = "Birth place.",
-    birth_place_latin = "Birth place.",
-    gender = "Ж",
-    issued_by = "Foreign passport RF issued by a state organisation.",
-    issue_date = date(2022, 5, 12),
-    expiry_date = date(2032, 5, 12),
+    number = "00 0000000"
+    first_name = "Firstname"
+    first_name_latin = "Firstname"
+    last_name = "LastName"
+    last_name_latin = "LastName"
+    second_name = "SecondName"
+    citizenship = "Citizenship"
+    citizenship_latin = "Citizenship"
+    birth_date = date(2000, 1, 1)
+    birth_place = "Birth place."
+    birth_place_latin = "Birth place."
+    gender = "Ж"
+    issued_by = "Foreign passport RF issued by a state organisation."
+    issue_date = date(2022, 5, 12)
+    expiry_date = date(2032, 5, 12)
     is_verified = True
 
     class Meta:
